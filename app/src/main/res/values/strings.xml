@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">DeePee</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string-array name="data_type">
+        <item>WI-FI</item>
+        <item>Mobile Data</item>
+    </string-array>
 </resources>
