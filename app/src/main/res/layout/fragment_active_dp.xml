@@ -22,21 +22,34 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <com.google.android.material.textfield.TextInputLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:background="#CDCDCD"
-                app:boxBackgroundMode="filled">
+                android:orientation="vertical">
 
-                <com.google.android.material.textfield.TextInputEditText
+                <EditText
+                    android:id="@+id/editTextTextPersonName2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="right|end"
-                    android:backgroundTint="@android:color/transparent"
-                    android:drawableEnd="@drawable/ic_baseline_search_24"
-                    android:hint="Search apps" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:background="@drawable/text_input_layout_shape"
+                    android:drawableRight="@drawable/ic_baseline_search_24"
+                    android:drawablePadding="20dp"
+                    android:ems="10"
+                    android:hint="Search apps"
+                    android:inputType="textPersonName"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="30dp"
+                    android:paddingRight="20dp"
+                    android:paddingBottom="5dp"
+                    android:textAlignment="viewEnd" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000"
+                    android:orientation="vertical"></LinearLayout>
+            </LinearLayout>
 
             <Switch
                 android:id="@+id/switch2"

@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="15dp"
     android:animateLayoutChanges="true">
 
     <androidx.cardview.widget.CardView
@@ -60,6 +61,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="10dp"
+                android:layout_marginBottom="5dp"
                 android:animateLayoutChanges="true"
                 android:orientation="vertical">
 
@@ -91,7 +93,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:progress="85"
-                    android:progressTint="#FF979797" />
+                    android:progressTint="@color/colorPrimary" />
             </LinearLayout>
 
             <LinearLayout
@@ -125,32 +127,35 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="5dp"
                     android:layout_weight="1"
-                    android:background="#ECECEC"
-                    android:paddingTop="5dp"
-                    android:textColorHint="@color/colorPrimary"
-                    android:visibility="visible"
-                    app:boxBackgroundMode="filled"
-                    app:boxCornerRadiusBottomEnd="2dp"
-                    app:boxCornerRadiusBottomStart="2dp"
-                    app:boxCornerRadiusTopEnd="2dp"
-                    app:boxCornerRadiusTopStart="2dp"
-                    app:boxStrokeColor="@color/colorPrimary"
-                    app:boxStrokeWidth="2dp"
-                    app:boxStrokeWidthFocused="1dp"
-                    app:hintEnabled="true"
-                    app:hintTextColor="@color/colorPrimary"
-                    app:placeholderTextColor="@color/colorPrimary">
+                    android:background="@drawable/text_input_layout_shape"
+                    android:paddingLeft="0dp"
+                    android:paddingRight="0dp"
+                    android:paddingBottom="0dp"
+                    android:textColorHint="#333"
+                    app:helperTextTextColor="#333">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="?attr/editTextBackground"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="0dp"
+                        android:background="@android:color/transparent"
                         android:backgroundTint="@android:color/transparent"
-                        android:hint="hint"
-                        android:textColorHighlight="@color/colorPrimary"
-                        android:textColorLink="@color/colorPrimaryDark" />
+                        android:hint="Enter data size"
+                        android:outlineProvider="none"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="10dp"
+                        android:singleLine="true"
+                        android:textColorHighlight="#333"
+                        android:textColorLink="#333" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#000"
+                        android:orientation="vertical"></LinearLayout>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <LinearLayout
