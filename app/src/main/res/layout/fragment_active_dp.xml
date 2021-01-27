@@ -22,19 +22,30 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <EditText
-                android:id="@+id/editTextTextPersonName"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:text="ACTIVE DP" />
+                android:layout_margin="5dp"
+                android:background="#CDCDCD"
+                app:boxBackgroundMode="filled">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|end"
+                    android:backgroundTint="@android:color/transparent"
+                    android:drawableEnd="@drawable/ic_baseline_search_24"
+                    android:hint="Search apps" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <Switch
                 android:id="@+id/switch2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="All apps" />
+                android:layout_margin="5dp"
+                android:padding="15dp"
+                android:text="All apps"
+                android:textSize="18sp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view2"
