@@ -33,10 +33,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        app:tabBackground="@color/colorPrimary"
-        app:tabIndicatorColor="#fff"
+        android:background="@color/colorPrimary"
+        app:tabIndicatorColor="@color/primaryTextColor"
         app:tabIndicatorGravity="bottom"
-        app:tabTextColor="#fff">
+        app:tabMode="auto"
+        app:tabTextColor="@color/primaryTextColor">
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
