@@ -21,6 +21,7 @@ import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -49,7 +50,7 @@ public class DpsFragment extends Fragment {
     RecyclerView.LayoutManager layoutManager;
 
     Dialog createDpDialog;
-    FloatingActionButton createDpFabBtn;
+    ExtendedFloatingActionButton createDpFabBtn;
 
     Spinner dialogDataTypeSpinner;
     Button dialogCreateDataPlanButton;
