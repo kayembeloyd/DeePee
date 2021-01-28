@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import android.view.ViewGroup;
 
 import com.loycompany.deepee.R;
 import com.loycompany.deepee.adapters.MainAppCardRecyclerViewAdapter;
+import com.loycompany.deepee.adapters.MainDataPlanPagerAdapter;
 import com.loycompany.deepee.adapters.MainDataPlanRecyclerViewAdapter;
 import com.loycompany.deepee.classes.AppCard;
 import com.loycompany.deepee.classes.DataPlan;
@@ -27,14 +29,18 @@ import java.util.List;
  */
 public class ActiveDpFragment extends Fragment {
 
+    // FOR RECYCLER VIEW
     List<DataPlan> dataPlanList;
-
     MainDataPlanRecyclerViewAdapter mainDataPlanRecyclerViewAdapter;
     RecyclerView recyclerView1;
     RecyclerView.LayoutManager layoutManager1;
 
-    List<AppCard> appCardList;
+    // FOR PAGER
+    /*List<DataPlan> dataPlanList;
+    MainDataPlanPagerAdapter mainDataPlanPagerAdapter;
+    ViewPager viewPager;*/
 
+    List<AppCard> appCardList;
     MainAppCardRecyclerViewAdapter mainAppCardRecyclerViewAdapter;
     RecyclerView recyclerView2;
     RecyclerView.LayoutManager layoutManager2;
@@ -53,21 +59,26 @@ public class ActiveDpFragment extends Fragment {
         // Required empty public constructor
 
         // Make sure you load plans from database
+        // FOR RECYCLER VIEW
         dataPlanList = new ArrayList<>();
-
-        for (int i = 0; i < 10; i++){
+        for (int i = 0; i < 1; i++){
             dataPlanList.add(new DataPlan());
         }
-
         mainDataPlanRecyclerViewAdapter = new MainDataPlanRecyclerViewAdapter(getContext(), dataPlanList);
 
 
-        appCardList = new ArrayList<>();
+        // FOR PAGER
+        /*
+        dataPlanList = new ArrayList<>();
+        for (int i = 0; i < 10; i++){
+            dataPlanList.add(new DataPlan());
+        }
+        mainDataPlanPagerAdapter = new MainDataPlanPagerAdapter(dataPlanList, getContext());*/
 
+        appCardList = new ArrayList<>();
         for (int i = 0; i < 10; i++){
             appCardList.add(new AppCard());
         }
-
         mainAppCardRecyclerViewAdapter = new MainAppCardRecyclerViewAdapter(getContext(), appCardList);
 
     }
@@ -104,6 +115,7 @@ public class ActiveDpFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_active_dp, container, false);
 
+        // FOR RECYCLER VIEW
         mainDataPlanRecyclerViewAdapter = new MainDataPlanRecyclerViewAdapter(getContext(), dataPlanList);
 
         recyclerView1 = rootView.findViewById(R.id.recycler_view1);
@@ -113,6 +125,11 @@ public class ActiveDpFragment extends Fragment {
         recyclerView1.setLayoutManager(layoutManager1);
         recyclerView1.setItemAnimator(new DefaultItemAnimator());
         recyclerView1.setAdapter(mainDataPlanRecyclerViewAdapter);
+
+        // FOR PAGER
+        /* mainDataPlanPagerAdapter = new MainDataPlanPagerAdapter(dataPlanList, getContext());
+        viewPager = rootView.findViewById(R.id.view_pager);
+        viewPager.setAdapter(mainDataPlanPagerAdapter); */
 
 
         mainAppCardRecyclerViewAdapter = new MainAppCardRecyclerViewAdapter(getContext(), appCardList);

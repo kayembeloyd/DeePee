@@ -17,6 +17,13 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
+            <!--FOR PAGER-->
+            <!--<androidx.viewpager.widget.ViewPager
+                android:id="@+id/view_pager"
+                android:layout_width="match_parent"
+                android:layout_height="250dp" />-->
+
+            <!--FOR RECYCLER VIEW-->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view1"
                 android:layout_width="match_parent"
@@ -25,7 +32,12 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp"
                 android:orientation="vertical">
 
                 <EditText

@@ -45,7 +45,7 @@
                     android:layout_height="wrap_content"
                     android:drawableEnd="@drawable/ic_baseline_keyboard_arrow_down_24"
                     android:text="Whatsapp"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
 
                 <Switch
                     android:id="@+id/switch1"
@@ -76,7 +76,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Data used (25mb of 600mb)"
-                        android:textSize="15sp" />
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/textView"

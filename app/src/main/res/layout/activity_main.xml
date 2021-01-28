@@ -36,7 +36,7 @@
         android:background="@color/colorPrimary"
         app:tabIndicatorColor="@color/primaryTextColor"
         app:tabIndicatorGravity="bottom"
-        app:tabMode="auto"
+        app:tabMode="fixed"
         app:tabTextColor="@color/primaryTextColor">
 
         <com.google.android.material.tabs.TabItem
