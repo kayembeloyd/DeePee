@@ -22,6 +22,8 @@ import android.widget.Spinner;
 import android.widget.TimePicker;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.loycompany.deepee.DataPlanActivity;
 import com.loycompany.deepee.R;
 import com.loycompany.deepee.adapters.MainDataPlanRecyclerViewAdapter;
@@ -52,7 +54,7 @@ public class DpsFragment extends Fragment {
     Spinner dialogDataTypeSpinner;
     Button dialogCreateDataPlanButton;
 
-    Button dialogStartTime, dialogEndTime;
+    TextInputEditText dialogStartTime, dialogEndTime;
 
     int day, month, year, hour, minute;
     int myday, mymonth, myyear, myhour, myminute;
@@ -157,7 +159,45 @@ public class DpsFragment extends Fragment {
                 dialogStartTime = createDpDialog.findViewById(R.id.dialog_start_time_button);
                 dialogEndTime = createDpDialog.findViewById(R.id.dialog_end_time_button);
 
-                dialogStartTime.setOnClickListener(new View.OnClickListener() {
+                dialogStartTime.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        if (hasFocus){
+
+                            Calendar calendar = Calendar.getInstance();
+
+                            year = calendar.get(Calendar.YEAR);
+                            month = calendar.get(Calendar.MONTH);
+                            day = calendar.get(Calendar.DAY_OF_MONTH);
+
+
+                            DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+                                @Override
+                                public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                                    myyear = year;
+                                    myday = day;
+                                    mymonth = month;
+
+                                    Calendar c = Calendar.getInstance();
+                                    hour = c.get(Calendar.HOUR);
+                                    minute = c.get(Calendar.MINUTE);
+                                    TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+                                        @Override
+                                        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                            myhour = hourOfDay;
+                                            myminute = minute;
+                                        }
+                                    }, hour, minute, true);
+                                    timePickerDialog.show();
+                                }
+                            }, year, month, day);
+
+                            datePickerDialog.show();
+                        }
+                    }
+                });
+
+                /*dialogStartTime.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Calendar calendar = Calendar.getInstance();
@@ -190,7 +230,7 @@ public class DpsFragment extends Fragment {
 
                         datePickerDialog.show();
                     }
-                });
+                });*/
 
                 createDpDialog.show();
             }
