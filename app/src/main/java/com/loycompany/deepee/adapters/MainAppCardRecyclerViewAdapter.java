@@ -52,6 +52,9 @@ public class MainAppCardRecyclerViewAdapter extends RecyclerView.Adapter<MainApp
             appNameTextView = itemView.findViewById(R.id.app_name_textView);
             linearLayoutExpandable = itemView.findViewById(R.id.linear_layout_expandable);
 
+            linearLayoutExpandable.setVisibility(View.GONE);
+            appNameTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_baseline_keyboard_arrow_down_24, 0);
+
             appIconCircleImageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

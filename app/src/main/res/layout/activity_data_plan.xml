@@ -6,6 +6,17 @@
     android:layout_height="match_parent"
     tools:context=".DataPlanActivity">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/my_green"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:navigationIcon="@drawable/ic_baseline_keyboard_arrow_left_24_white"
+        app:title="Data plan name"
+        app:titleTextColor="@color/my_white" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -25,7 +36,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
-                android:backgroundTint="@color/colorAccent"
+                android:backgroundTint="@color/my_red"
                 android:text="Delete"
                 android:textColor="@color/secondaryTextColor" />
 
@@ -36,7 +47,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
-                android:backgroundTint="@color/colorPrimary"
+                android:backgroundTint="@color/my_green"
                 android:text="Save"
                 android:textColor="@color/primaryTextColor" />
         </LinearLayout>
@@ -45,6 +56,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"
         android:layout_marginBottom="45dp">
 
         <LinearLayout
@@ -57,7 +69,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
-                android:backgroundTint="@color/colorPrimary"
+                android:backgroundTint="@color/my_yellow"
                 android:text="Activate Data plan"
                 android:textColor="@color/primaryTextColor" />
 
@@ -79,7 +91,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:text="60% used"
-                    android:textColor="@color/colorPrimary" />
+                    android:textColor="@color/my_green" />
 
                 <TextView
                     android:id="@+id/textView12"
@@ -87,7 +99,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:text="40mb of 400mb remaining"
-                    android:textColor="@color/colorPrimary" />
+                    android:textColor="@color/my_green" />
             </LinearLayout>
 
             <LinearLayout

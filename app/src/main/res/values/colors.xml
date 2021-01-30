@@ -14,4 +14,12 @@
     <color name="secondaryTextColor">#ffebee</color>
 
     <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">#eff3</color>
+
+    <color name="my_black">#231f20</color>
+    <color name="my_red">#ef4136</color>
+    <color name="my_green">#4f9675</color>
+    <color name="my_green_black">#458467</color>
+    <color name="my_white">#ffffff</color>
+    <color name="my_grey">#eeeeef</color>
+    <color name="my_yellow">#f7941d</color>
 </resources>

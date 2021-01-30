@@ -39,8 +39,8 @@ public class DataPlanActivity extends AppCompatActivity {
 
         pieData = new ArrayList<>();
 
-        pieData.add(new SliceValue(15, Color.BLUE));
-        pieData.add(new SliceValue(45, Color.GREEN));
+        pieData.add(new SliceValue(60, Color.rgb(0,104,56)));
+        pieData.add(new SliceValue(40, Color.rgb(230,231,232)));
 
         PieChartData pieChartData = new PieChartData(pieData);
         pieChartView.setPieChartData(pieChartData);
