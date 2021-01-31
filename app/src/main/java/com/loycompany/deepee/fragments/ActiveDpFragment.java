@@ -1,6 +1,8 @@
 package com.loycompany.deepee.fragments;
 
 import android.content.Context;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -11,13 +13,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.loycompany.deepee.R;
 import com.loycompany.deepee.adapters.MainAppCardRecyclerViewAdapter;
 import com.loycompany.deepee.adapters.MainDataPlanRecyclerViewAdapter;
 import com.loycompany.deepee.classes.CustomApp;
 import com.loycompany.deepee.classes.DataPlan;
+import com.loycompany.deepee.classes.DateTime;
+import com.loycompany.deepee.database.DeePeeDatabase;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,15 +50,44 @@ public class ActiveDpFragment extends Fragment {
     RecyclerView recyclerView2;
     RecyclerView.LayoutManager layoutManager2;
 
+    private DeePeeDatabase deePeeDatabase;
+    private SQLiteDatabase mDb;
+
     public ActiveDpFragment(Context context) {
         // Required empty public constructor
+
+        deePeeDatabase = new DeePeeDatabase(context);
+
+        try {
+            deePeeDatabase.updateDataBase();
+        } catch (IOException mIOException) {
+            throw new Error("UnableToUpdateDatabase");
+        }
+
+        mDb = deePeeDatabase.getWritableDatabase();
+
 
         // Make sure you load plans from database
         // FOR RECYCLER VIEW
         dataPlanList = new ArrayList<>();
+
+
+
         for (int i = 0; i < 1; i++){
-            dataPlanList.add(new DataPlan(context));
+            DataPlan dataPlan = new DataPlan(context);
+
+            dataPlan.name = "Default Plan";
+            dataPlan.totalData = 43;
+            dataPlan.totalAssignedData = 0;
+            dataPlan.totalUsedData = 43;
+            dataPlan.dataPlanType = DataPlan.DataPlanType.MOBILE_DATA;
+
+            dataPlan.startDateTime = new DateTime(0,0,0,2021,1,31);
+            dataPlan.endDateTime = new DateTime(0,0,0,2021,1,31);
+
+            dataPlanList.add(dataPlan);
         }
+
         mainDataPlanRecyclerViewAdapter = new MainDataPlanRecyclerViewAdapter(getContext(), dataPlanList);
 
 
@@ -69,7 +104,6 @@ public class ActiveDpFragment extends Fragment {
             customAppList.add(new CustomApp(context));
         }
         mainAppCardRecyclerViewAdapter = new MainAppCardRecyclerViewAdapter(getContext(), customAppList);
-
     }
 
     /**
@@ -112,7 +146,6 @@ public class ActiveDpFragment extends Fragment {
         viewPager = rootView.findViewById(R.id.view_pager);
         viewPager.setAdapter(mainDataPlanPagerAdapter); */
 
-
         mainAppCardRecyclerViewAdapter = new MainAppCardRecyclerViewAdapter(getContext(), customAppList);
 
         recyclerView2 = rootView.findViewById(R.id.recycler_view2);
@@ -122,6 +155,12 @@ public class ActiveDpFragment extends Fragment {
         recyclerView2.setLayoutManager(layoutManager2);
         recyclerView2.setItemAnimator(new DefaultItemAnimator());
         recyclerView2.setAdapter(mainAppCardRecyclerViewAdapter);
+
+        if (deePeeDatabase.getDataPlans() == null){
+            Toast.makeText(getContext(), "There is nothing in the database", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(getContext(), "There is something in the database", Toast.LENGTH_LONG).show();
+        }
 
         // Inflate the layout for this fragment
         return rootView;

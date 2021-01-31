@@ -5,6 +5,8 @@ import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -30,7 +32,10 @@ import com.loycompany.deepee.DataPlanActivity;
 import com.loycompany.deepee.R;
 import com.loycompany.deepee.adapters.MainDataPlanRecyclerViewAdapter;
 import com.loycompany.deepee.classes.DataPlan;
+import com.loycompany.deepee.classes.DateTime;
+import com.loycompany.deepee.database.DeePeeDatabase;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -61,6 +66,9 @@ public class DpsFragment extends Fragment {
     int day, month, year, hour, minute;
     int myday, mymonth, myyear, myhour, myminute;
 
+    private DeePeeDatabase deePeeDatabase;
+    private SQLiteDatabase mDb;
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -73,12 +81,35 @@ public class DpsFragment extends Fragment {
     public DpsFragment(Context context) {
         // Required empty public constructor
 
-        // Make sure you load plans from database
-        dataPlanList = new ArrayList<>();
+        deePeeDatabase = new DeePeeDatabase(context);
 
-        for (int i = 0; i < 10; i++){
-            dataPlanList.add(new DataPlan(context));
+        try {
+            deePeeDatabase.updateDataBase();
+        } catch (IOException mIOException) {
+            throw new Error("UnableToUpdateDatabase");
         }
+
+        mDb = deePeeDatabase.getWritableDatabase();
+
+        // Make sure you load plans from database
+        dataPlanList = deePeeDatabase.getDataPlans();
+        if (dataPlanList == null) dataPlanList = new ArrayList<>();
+
+        // for (int i = 0; i < 10; i++){
+            /*DataPlan dataPlan = new DataPlan(context);
+
+            dataPlan.name = "Sample DataPlan - " + i;
+            dataPlan.totalData = 200;
+            dataPlan.totalAssignedData = 123;
+            dataPlan.totalUsedData = 43;
+
+            dataPlan.startDateTime = new DateTime(0,34,1,2021,4,3);
+            dataPlan.endDateTime = new DateTime(45,30,3,2021,4,3);
+
+            dataPlan.save();
+
+            dataPlanList.add(dataPlan);*/
+        // }
 
         mainDataPlanRecyclerViewAdapter = new MainDataPlanRecyclerViewAdapter(getContext(), dataPlanList);
     }

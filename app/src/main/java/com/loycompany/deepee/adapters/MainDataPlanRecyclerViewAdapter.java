@@ -29,6 +29,8 @@ public class MainDataPlanRecyclerViewAdapter extends RecyclerView.Adapter<MainDa
     @Override
     public void onBindViewHolder(final MainDataPlanRecyclerViewAdapter.ViewHolder holder, final int position) {
         // This is where stuff goes;
+        holder.dpName.setText(this.dataPlanList.get(position).name);
+
         holder.dpName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -36,6 +38,21 @@ public class MainDataPlanRecyclerViewAdapter extends RecyclerView.Adapter<MainDa
                 mContext.startActivity(intent);
             }
         });
+
+        if (this.dataPlanList.get(position).dataPlanType == DataPlan.DataPlanType.MOBILE_DATA){
+            holder.dpDataPlanType.setText("MOBILE_DATA");
+        } else if (this.dataPlanList.get(position).dataPlanType == DataPlan.DataPlanType.WIFI){
+            holder.dpDataPlanType.setText("WIFI");
+        } else {
+            holder.dpDataPlanType.setText("WIFI_MOBILE_DATA");
+        }
+
+        String dpDataUsedTotalData = this.dataPlanList.get(position).totalUsedData + "mb of " + this.dataPlanList.get(position).totalData + "mb used.";
+        holder.dpDataUsedTotalData.setText(dpDataUsedTotalData);
+
+        holder.dpTimeRemaining.setText("X days X hours X minutes remaining");
+
+        holder.dpEndDate.setText(this.dataPlanList.get(position).endDateTime.toString());
     }
 
     @NonNull
@@ -48,11 +65,16 @@ public class MainDataPlanRecyclerViewAdapter extends RecyclerView.Adapter<MainDa
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        TextView dpName;
+        TextView dpName, dpDataPlanType, dpDataUsedTotalData, dpTimeRemaining, dpEndDate;
+
         public ViewHolder(View itemView) {
             super(itemView);
 
             dpName = itemView.findViewById(R.id.dp_name);
+            dpDataPlanType = itemView.findViewById(R.id.dp_data_plan_type);
+            dpDataUsedTotalData = itemView.findViewById(R.id.dp_data_used_total_data);
+            dpTimeRemaining = itemView.findViewById(R.id.dp_time_remaining);
+            dpEndDate = itemView.findViewById(R.id.dp_end_date);
         }
     }
 

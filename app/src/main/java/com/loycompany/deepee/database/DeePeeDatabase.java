@@ -2,6 +2,7 @@ package com.loycompany.deepee.database;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.widget.Toast;
 
 import com.loycompany.deepee.classes.CustomApp;
 import com.loycompany.deepee.classes.DataPlan;
@@ -48,8 +49,10 @@ public class DeePeeDatabase  extends DatabaseHelper{
             dateTime.parseData(cursor.getString(7));
             dataPlan.endDateTime = dateTime;
 
+            cursor.close();
             return dataPlan;
         } else {
+            cursor.close();
             return null;
         }
     }
@@ -71,8 +74,10 @@ public class DeePeeDatabase  extends DatabaseHelper{
             customApp.totalData = cursor.getFloat(5);
             customApp.totalUsedData = cursor.getFloat(6);
 
+            cursor.close();
             return customApp;
         } else {
+            cursor.close();
             return null;
         }
     }
@@ -102,6 +107,7 @@ public class DeePeeDatabase  extends DatabaseHelper{
             }
         }
 
+        cursor.close();
         return customApps;
     }
 
@@ -140,9 +146,13 @@ public class DeePeeDatabase  extends DatabaseHelper{
                 dataPlans.add(dataPlan);
                 cursor.moveToNext();
             }
-        }
 
-        return dataPlans;
+            cursor.close();
+            return dataPlans;
+        } else {
+            cursor.close();
+            return null;
+        }
     }
 
     public boolean deleteCustomApp(int id){
@@ -158,8 +168,8 @@ public class DeePeeDatabase  extends DatabaseHelper{
 
         Cursor cursor = getReadableDatabase().rawQuery(sql_statement, null);
 
-        int isEnabled = 0;
-        int isUnlimited = 0;
+        int isEnabled;
+        int isUnlimited;
 
         if (customApp.isEnabled) isEnabled = 1; else isEnabled = 0;
         if (customApp.isUnlimited) isUnlimited = 1; else isUnlimited = 0;
@@ -186,6 +196,7 @@ public class DeePeeDatabase  extends DatabaseHelper{
         }
         getWritableDatabase().execSQL(sql_statement);
 
+        cursor.close();
         return true;
     }
 
@@ -195,13 +206,13 @@ public class DeePeeDatabase  extends DatabaseHelper{
 
         Cursor cursor = getReadableDatabase().rawQuery(sql_statement, null);
 
-        String dataPlanType = "";
+        String dataPlanTypeString;
         if (dataPlan.dataPlanType == DataPlan.DataPlanType.MOBILE_DATA){
-            dataPlanType = "MOBILE_DATA";
+            dataPlanTypeString = "MOBILE_DATA";
         } else if(dataPlan.dataPlanType == DataPlan.DataPlanType.WIFI){
-            dataPlanType = "WIFI";
+            dataPlanTypeString = "WIFI";
         } else {
-            dataPlanType = "WIFI_MOBILE_DATA";
+            dataPlanTypeString = "WIFI_MOBILE_DATA";
         }
 
         if (cursor.getCount() > 0){
@@ -212,7 +223,7 @@ public class DeePeeDatabase  extends DatabaseHelper{
                     "totalData = " + dataPlan.totalData + "" +
                     "totalAssignedData = " + dataPlan.totalAssignedData + "" +
                     "totalUsedData = " + dataPlan.totalUsedData + "" +
-                    "dataPlanType = '" + dataPlanType + "'" +
+                    "dataPlanType = '" + dataPlanTypeString + "'" +
                     "startDateTime = '" + dataPlan.startDateTime.toString() + "'" +
                     "endDateTime = '" + dataPlan.endDateTime.toString() + "'" +
                     "";
@@ -220,17 +231,20 @@ public class DeePeeDatabase  extends DatabaseHelper{
         } else {
             sql_statement = "INSERT INTO DataPlans (name, totalData, totalAssignedData, totalUsedData, dataPlanType, startDateTime, endDateTime) VALUES " +
                     "("
-                    + dataPlan.name + ","
+                    + "'" + dataPlan.name + "',"
                     + dataPlan.totalData + ","
                     + dataPlan.totalAssignedData + ","
                     + dataPlan.totalUsedData + ","
-                    + dataPlanType + ","
-                    + dataPlan.startDateTime.toString() + ","
-                    + dataPlan.endDateTime.toString() +
+                    + "'" + dataPlanTypeString + "',"
+                    + "'" + dataPlan.startDateTime.toString() + "',"
+                    + "'" + dataPlan.endDateTime.toString() + "'" +
                     ")";
         }
 
+        // Toast.makeText(context, "Sql_statement = " + sql_statement, Toast.LENGTH_LONG).show();
+
         getWritableDatabase().execSQL(sql_statement);
+        cursor.close();
 
         return true;
     }

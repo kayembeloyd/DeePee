@@ -13,10 +13,22 @@ public class DateTime {
     int month = 0;
     int day = 0;
 
+    public DateTime() {
+    }
+
+    public DateTime(int sec, int min, int hour, int year, int month, int day) {
+        this.sec = sec;
+        this.min = min;
+        this.hour = hour;
+        this.year = year;
+        this.month = month;
+        this.day = day;
+    }
+
     @NonNull
     @Override
     public String toString(){
-        return String.valueOf(day) + "-" + String.valueOf(month) + "-" + String.valueOf(year) + "(" + String.valueOf(hour) + "-" + String.valueOf(min) + "-" + String.valueOf(sec);
+        return day + "-" + month + "-" + year + "(" + hour + "-" + min + "-" + sec;
     }
 
     public void parseData(String data){

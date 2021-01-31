@@ -15,11 +15,11 @@ public class DataPlan {
     // Helpers
     // Database db;
 
-    private static DeePeeDatabase deePeeDatabase;
+    private DeePeeDatabase deePeeDatabase;
     private SQLiteDatabase mDb;
 
     private Context mContext;
-    public enum DataPlanType {WIFI, MOBILE_DATA, WIFI_MOBILE_DATA};
+    public enum DataPlanType {WIFI, MOBILE_DATA, WIFI_MOBILE_DATA}
 
     public int id;
     public String name;
@@ -42,18 +42,14 @@ public class DataPlan {
             throw new Error("UnableToUpdateDatabase");
         }
 
-        try {
-            mDb = deePeeDatabase.getWritableDatabase();
-        } catch (SQLException mSQLException) {
-            throw mSQLException;
-        }
+        mDb = deePeeDatabase.getWritableDatabase();
     }
 
     boolean setStartDataTime(DateTime dateTime){return true;}
     boolean setEndDataTime(DateTime dateTime){return true;}
     boolean assignDataSize(float dataSize){return true;}
 
-    boolean save(){
+    public boolean save(){
         return deePeeDatabase.saveDataPlan(this);
     }
 
