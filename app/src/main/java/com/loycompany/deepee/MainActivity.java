@@ -3,10 +3,15 @@ package com.loycompany.deepee;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
 import com.google.android.material.tabs.TabLayout;
 import com.loycompany.deepee.adapters.MainViewPagerAdapter;
+import com.loycompany.deepee.database.DeePeeDatabase;
+
+import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
 

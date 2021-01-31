@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.loycompany.deepee.R;
-import com.loycompany.deepee.classes.AppCard;
+import com.loycompany.deepee.classes.CustomApp;
 
 import java.util.List;
 
@@ -19,11 +19,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainAppCardRecyclerViewAdapter extends RecyclerView.Adapter<MainAppCardRecyclerViewAdapter.ViewHolder> {
 
-    public List<AppCard> appCardList;
+    public List<CustomApp> customAppList;
     Context mContext;
 
-    public MainAppCardRecyclerViewAdapter(Context context, List<AppCard> dataPlans) {
-        this.appCardList = dataPlans;
+    public MainAppCardRecyclerViewAdapter(Context context, List<CustomApp> dataPlans) {
+        this.customAppList = dataPlans;
         this.mContext = context;
     }
 
@@ -85,7 +85,7 @@ public class MainAppCardRecyclerViewAdapter extends RecyclerView.Adapter<MainApp
 
     @Override
     public int getItemCount(){
-        return appCardList.size();
+        return customAppList.size();
     }
 
 }

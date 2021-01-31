@@ -36,8 +36,8 @@ public class MainViewPagerAdapter extends FragmentPagerAdapter {
     public MainViewPagerAdapter(@NonNull FragmentManager fm, Context context) {
         super(fm, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
 
-        activeDpFragment = ActiveDpFragment.newInstance("", "");
-        dpsFragment = DpsFragment.newInstance("", "");
+        activeDpFragment = ActiveDpFragment.newInstance(context);
+        dpsFragment = DpsFragment.newInstance(context);
         settingsFragment = SettingsFragment.newInstance("", "");
     }
 

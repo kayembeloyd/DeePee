@@ -4,36 +4,30 @@ import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.loycompany.deepee.MainActivity;
 import com.loycompany.deepee.database.DeePeeDatabase;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
-public class DataPlan {
+public class CustomApp {
     // Helpers
-    // Database db;
-
     private static DeePeeDatabase deePeeDatabase;
     private SQLiteDatabase mDb;
 
     private Context mContext;
-    public enum DataPlanType {WIFI, MOBILE_DATA, WIFI_MOBILE_DATA};
 
     public int id;
     public String name;
+    public int dataPlanID;
+
+    public boolean isEnabled;
+    public boolean isUnlimited;
 
     public float totalData;
-    public float totalAssignedData;
     public float totalUsedData;
-    public DataPlanType dataPlanType;
 
-    public DateTime startDateTime;
-    public DateTime endDateTime;
-
-    public DataPlan(Context context) {
+    public CustomApp(Context context) {
         this.mContext = context;
+
         deePeeDatabase = new DeePeeDatabase(context);
 
         try {
@@ -49,18 +43,23 @@ public class DataPlan {
         }
     }
 
-    boolean setStartDataTime(DateTime dateTime){return true;}
-    boolean setEndDataTime(DateTime dateTime){return true;}
-    boolean assignDataSize(float dataSize){return true;}
+    boolean enable(){return true;}
+    boolean disable(){return true;}
 
-    boolean save(){
-        return deePeeDatabase.saveDataPlan(this);
-    }
+    boolean addData(float dataSize){return true;}
+    boolean removeData(float dataSize){return true;}
+    boolean setUnlimited(boolean isUnlimited){return true;}
+    boolean resetData(){return true;}
+    boolean startRecording(){return true;}
+    boolean stopRecording(){return true;}
 
+    int getDataPlan(){return 0;}
+    boolean setDataPlan(int dataPlanID){return true;}
+
+    boolean save(){return this.deePeeDatabase.saveCustomApp(this);}
     boolean delete(){
-        return deePeeDatabase.deleteDataPlan(this.id);
+        return deePeeDatabase.deleteCustomApp(this.id);
     }
 
-    List<CustomApp> customApps(){return new ArrayList<>();}
-    boolean setDataPlanType(DataPlanType dataPlanType){return true;}
+    boolean save(Context context){return true;}
 }

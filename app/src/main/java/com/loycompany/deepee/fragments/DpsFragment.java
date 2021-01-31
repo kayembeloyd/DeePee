@@ -3,6 +3,7 @@ package com.loycompany.deepee.fragments;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -69,14 +70,14 @@ public class DpsFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public DpsFragment() {
+    public DpsFragment(Context context) {
         // Required empty public constructor
 
         // Make sure you load plans from database
         dataPlanList = new ArrayList<>();
 
         for (int i = 0; i < 10; i++){
-            dataPlanList.add(new DataPlan());
+            dataPlanList.add(new DataPlan(context));
         }
 
         mainDataPlanRecyclerViewAdapter = new MainDataPlanRecyclerViewAdapter(getContext(), dataPlanList);
@@ -85,17 +86,12 @@ public class DpsFragment extends Fragment {
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment DpsFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static DpsFragment newInstance(String param1, String param2) {
-        DpsFragment fragment = new DpsFragment();
+    public static DpsFragment newInstance(Context context) {
+        DpsFragment fragment = new DpsFragment(context);
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
