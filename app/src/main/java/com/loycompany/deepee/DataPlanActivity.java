@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -48,6 +49,11 @@ public class DataPlanActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_data_plan);
 
+        toolbar = findViewById(R.id.toolbar);
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         activateDataPlan = findViewById(R.id.activate_plan_btn);
         percentDataUsed = findViewById(R.id.percent_data_used);
         dataUsed = findViewById(R.id.data_used);
@@ -57,7 +63,7 @@ public class DataPlanActivity extends AppCompatActivity {
         dpStartTime = findViewById(R.id.dp_start_time);
         dpEndTime = findViewById(R.id.dp_end_time);
 
-        toolbar = findViewById(R.id.toolbar);
+        pieChartView = findViewById(R.id.pie_chart_view);
 
         // Get id of DataPlan
         int dataPlanId = Objects.requireNonNull(getIntent().getExtras()).getInt("id", 0);
@@ -102,21 +108,44 @@ public class DataPlanActivity extends AppCompatActivity {
 
                 toolbar.setTitle(dataPlan.name);
 
+                pieData = new ArrayList<>();
+
+                pieData.add(new SliceValue(((dataPlan.totalData - dataPlan.totalUsedData) / dataPlan.totalData) * 100, Color.rgb(230,231,232)));
+                pieData.add(new SliceValue( (dataPlan.totalUsedData / dataPlan.totalData) * 100, Color.rgb(0,104,56)));
+
+                PieChartData pieChartData = new PieChartData(pieData);
+                pieChartView.setPieChartData(pieChartData);
+
+                float p = (dataPlan.totalUsedData / dataPlan.totalData) * 100;
+                String ps = p + "% used ";
+                percentDataUsed.setText(ps);
+
+                float du = dataPlan.totalData - dataPlan.totalUsedData;
+                String dus = du + "mb of " + dataPlan.totalData + "mb remaining";
+                dataUsed.setText(dus);
+
             } else {
                 /// Unable to load dataPlan
             }
         } else {
             // That's a default
+            pieData = new ArrayList<>();
+
+            pieData.add(new SliceValue(100, Color.rgb(0,104,56)));
+            pieData.add(new SliceValue( 0, Color.rgb(230,231,232)));
+
+            PieChartData pieChartData = new PieChartData(pieData);
+            pieChartView.setPieChartData(pieChartData);
         }
+    }
 
-        pieChartView = findViewById(R.id.pie_chart_view);
-
-        pieData = new ArrayList<>();
-
-        pieData.add(new SliceValue(60, Color.rgb(0,104,56)));
-        pieData.add(new SliceValue(40, Color.rgb(230,231,232)));
-
-        PieChartData pieChartData = new PieChartData(pieData);
-        pieChartView.setPieChartData(pieChartData);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            super.onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

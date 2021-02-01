@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class CustomApp {
     // Helpers
-    private static DeePeeDatabase deePeeDatabase;
+    private DeePeeDatabase deePeeDatabase;
     private SQLiteDatabase mDb;
 
     private Context mContext;
@@ -36,11 +36,7 @@ public class CustomApp {
             throw new Error("UnableToUpdateDatabase");
         }
 
-        try {
-            mDb = deePeeDatabase.getWritableDatabase();
-        } catch (SQLException mSQLException) {
-            throw mSQLException;
-        }
+        mDb = deePeeDatabase.getWritableDatabase();
     }
 
     boolean enable(){return true;}
@@ -56,7 +52,9 @@ public class CustomApp {
     int getDataPlan(){return 0;}
     boolean setDataPlan(int dataPlanID){return true;}
 
-    boolean save(){return this.deePeeDatabase.saveCustomApp(this);}
+    public void save(){
+        deePeeDatabase.saveCustomApp(this);
+    }
     boolean delete(){
         return deePeeDatabase.deleteCustomApp(this.id);
     }

@@ -5,9 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.loycompany.deepee.R;
@@ -30,6 +32,40 @@ public class MainAppCardRecyclerViewAdapter extends RecyclerView.Adapter<MainApp
     @Override
     public void onBindViewHolder(@NonNull final MainAppCardRecyclerViewAdapter.ViewHolder holder, final int position) {
         // This is where stuff goes;
+
+        holder.linearLayoutExpandable.setVisibility(View.GONE);
+
+        holder.appName.setText(customAppList.get(position).name);
+
+        holder.aSwitch.setChecked(customAppList.get(position).isEnabled);
+
+        holder.appName.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_baseline_keyboard_arrow_down_24, 0);
+
+        holder.appIconCircleImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (holder.linearLayoutExpandable.getVisibility() == View.GONE){
+                    holder.linearLayoutExpandable.setVisibility(View.VISIBLE);
+                    holder.appName.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_baseline_keyboard_arrow_up_24, 0);
+                } else{
+                    holder.linearLayoutExpandable.setVisibility(View.GONE);
+                    holder.appName.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_baseline_keyboard_arrow_down_24, 0);
+                }
+            }
+        });
+
+        holder.appName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (holder.linearLayoutExpandable.getVisibility() == View.GONE){
+                    holder.linearLayoutExpandable.setVisibility(View.VISIBLE);
+                    holder.appName.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_baseline_keyboard_arrow_up_24, 0);
+                } else{
+                    holder.linearLayoutExpandable.setVisibility(View.GONE);
+                    holder.appName.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_baseline_keyboard_arrow_down_24, 0);
+                }
+            }
+        });
     }
 
     @NonNull
@@ -43,43 +79,17 @@ public class MainAppCardRecyclerViewAdapter extends RecyclerView.Adapter<MainApp
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         CircleImageView appIconCircleImageView;
-        TextView appNameTextView;
+        TextView appName;
         LinearLayout linearLayoutExpandable;
+        Switch aSwitch;
+
         public ViewHolder(View itemView) {
             super(itemView);
 
             appIconCircleImageView = itemView.findViewById(R.id.app_icon_circle_image_view);
-            appNameTextView = itemView.findViewById(R.id.app_name_textView);
+            appName = itemView.findViewById(R.id.app_name);
             linearLayoutExpandable = itemView.findViewById(R.id.linear_layout_expandable);
-
-            linearLayoutExpandable.setVisibility(View.GONE);
-            appNameTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_baseline_keyboard_arrow_down_24, 0);
-
-            appIconCircleImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (linearLayoutExpandable.getVisibility() == View.GONE){
-                        linearLayoutExpandable.setVisibility(View.VISIBLE);
-                        appNameTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_baseline_keyboard_arrow_up_24, 0);
-                    } else{
-                        linearLayoutExpandable.setVisibility(View.GONE);
-                        appNameTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_baseline_keyboard_arrow_down_24, 0);
-                    }
-                }
-            });
-
-            appNameTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (linearLayoutExpandable.getVisibility() == View.GONE){
-                        linearLayoutExpandable.setVisibility(View.VISIBLE);
-                        appNameTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_baseline_keyboard_arrow_up_24, 0);
-                    } else{
-                        linearLayoutExpandable.setVisibility(View.GONE);
-                        appNameTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_baseline_keyboard_arrow_down_24, 0);
-                    }
-                }
-            });
+            aSwitch = itemView.findViewById(R.id.switch1);
         }
     }
 

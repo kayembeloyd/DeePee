@@ -2,7 +2,6 @@ package com.loycompany.deepee.database;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.widget.Toast;
 
 import com.loycompany.deepee.classes.CustomApp;
 import com.loycompany.deepee.classes.DataPlan;
@@ -156,7 +155,7 @@ public class DeePeeDatabase  extends DatabaseHelper{
         return true;
     }
 
-    public boolean saveCustomApp(CustomApp customApp){
+    public void saveCustomApp(CustomApp customApp){
 
         sql_statement = "SELECT * FROM 'CustomApps' WHERE id = " + customApp.id;
 
@@ -169,21 +168,21 @@ public class DeePeeDatabase  extends DatabaseHelper{
         if (customApp.isUnlimited) isUnlimited = 1; else isUnlimited = 0;
 
         if (cursor.getCount() > 0) {
-            sql_statement = "UPDATE DataPlans SET " +
+            sql_statement = "UPDATE CustomApps SET " +
                     "name = '" + customApp.name + "'" +
                     "dataPlanID = " + customApp.dataPlanID +
                     "isEnabled = " + isEnabled +
                     "isUnlimited = " + isUnlimited +
                     "totalData = " + customApp.totalData + "" +
-                    "totalUsedData = " + customApp.totalUsedData + "" +
-                    "";
+                    "totalUsedData = " + customApp.totalUsedData +
+                    " WHERE id = " + customApp.id;
         } else {
-            sql_statement = "INSERT INTO DataPlans (name, totalData, totalAssignedData, totalUsedData, dataPlanType, startDateTime, endDateTime) VALUES " +
+            sql_statement = "INSERT INTO CustomApps (name, dataPlanID, isEnabled, isUnlimited, totalData, totalUsedData) VALUES " +
                     "("
-                    + customApp.name + ","
+                    + "'" + customApp.name + "',"
                     + customApp.dataPlanID + ","
-                    + customApp.isEnabled + ","
-                    + customApp.isUnlimited + ","
+                    + isEnabled + ","
+                    + isUnlimited + ","
                     + customApp.totalData + ","
                     + customApp.totalUsedData +
                     ")";
@@ -191,7 +190,6 @@ public class DeePeeDatabase  extends DatabaseHelper{
         getWritableDatabase().execSQL(sql_statement);
 
         cursor.close();
-        return true;
     }
 
     public int saveDataPlan(DataPlan dataPlan){

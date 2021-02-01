@@ -28,6 +28,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.loycompany.deepee.DataPlanActivity;
 import com.loycompany.deepee.R;
 import com.loycompany.deepee.adapters.MainDataPlanRecyclerViewAdapter;
+import com.loycompany.deepee.classes.CustomApp;
 import com.loycompany.deepee.classes.DataPlan;
 import com.loycompany.deepee.classes.DateTime;
 import com.loycompany.deepee.database.DeePeeDatabase;
@@ -182,6 +183,23 @@ public class DpsFragment extends Fragment {
                         }
 
                         dataPlanToCreate.id = dataPlanToCreate.save();
+
+                        // Create apps
+                        for (int i = 0; i < 10; i++){
+                            CustomApp customApp = new CustomApp(getContext());
+
+                            customApp.name = "Custom app #" + i;
+
+                            customApp.isEnabled = i % 2 == 0;
+
+                            customApp.dataPlanID = dataPlanToCreate.id;
+
+                            customApp.isUnlimited = false;
+                            customApp.totalData = 100f;
+                            customApp.totalUsedData = 0f;
+
+                            customApp.save();
+                        }
 
                         Intent intent = new Intent(getContext(), DataPlanActivity.class);
 
