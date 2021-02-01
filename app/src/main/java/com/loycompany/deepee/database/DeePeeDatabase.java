@@ -119,6 +119,7 @@ public class DeePeeDatabase  extends DatabaseHelper{
             while(!cursor.isAfterLast()){
                 DataPlan dataPlan = new DataPlan(this.context);
 
+                dataPlan.id = cursor.getInt(0);
                 dataPlan.name = cursor.getString(1);
                 dataPlan.totalData = cursor.getFloat(2);
                 dataPlan.totalAssignedData = cursor.getFloat(3);

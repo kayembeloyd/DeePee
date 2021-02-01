@@ -87,24 +87,6 @@ public class DpsFragment extends Fragment {
 
         if (dataPlanList == null || dataPlanList.size() == 0){
             dataPlanList = new ArrayList<>();
-
-            /*
-            for (int i = 0; i < 10; i++){
-                DataPlan dataPlan = new DataPlan(context);
-
-                dataPlan.name = "Sample DataPlan - " + i;
-                dataPlan.totalData = 200;
-                dataPlan.totalAssignedData = 123;
-                dataPlan.totalUsedData = 43;
-
-                dataPlan.startDateTime = new DateTime(0,34,1,2021,4,3);
-                dataPlan.endDateTime = new DateTime(45,30,3,2021,4,3);
-
-                dataPlan.save();
-
-                dataPlanList.add(dataPlan);
-            }
-            */
         }
 
         mainDataPlanRecyclerViewAdapter = new MainDataPlanRecyclerViewAdapter(getContext(), dataPlanList);
@@ -183,14 +165,12 @@ public class DpsFragment extends Fragment {
                         dataPlanToCreate.id = -1;
                         dataPlanToCreate.name = Objects.requireNonNull(dialogDpName.getText()).toString();
 
-                        dataPlanToCreate.startDateTime = DateTime.parseData(Objects.requireNonNull(dialogEndTime.getText()).toString());
+                        dataPlanToCreate.startDateTime = DateTime.parseData(Objects.requireNonNull(dialogStartTime.getText()).toString());
                         dataPlanToCreate.endDateTime = DateTime.parseData(Objects.requireNonNull(dialogEndTime.getText()).toString());
 
                         dataPlanToCreate.totalData = Float.parseFloat(Objects.requireNonNull(dialogDpDataSize.getText()).toString());
                         dataPlanToCreate.totalUsedData = 0f;
                         dataPlanToCreate.totalAssignedData = 0f;
-
-                        dataPlanToCreate.id = dataPlanToCreate.save();
 
                         // Create the dataPlan.
                         if (dialogDataTypeSpinner.getSelectedItemPosition() == 0){
@@ -200,6 +180,8 @@ public class DpsFragment extends Fragment {
                         } else {
                             dataPlanToCreate.dataPlanType = DataPlan.DataPlanType.WIFI_MOBILE_DATA;
                         }
+
+                        dataPlanToCreate.id = dataPlanToCreate.save();
 
                         Intent intent = new Intent(getContext(), DataPlanActivity.class);
 
