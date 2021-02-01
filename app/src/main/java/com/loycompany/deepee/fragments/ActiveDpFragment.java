@@ -74,6 +74,7 @@ public class ActiveDpFragment extends Fragment {
         for (int i = 0; i < 1; i++){
             DataPlan dataPlan = new DataPlan(context);
 
+            dataPlan.id = 0;
             dataPlan.name = "Default Plan";
             dataPlan.totalData = 43;
             dataPlan.totalAssignedData = 0;

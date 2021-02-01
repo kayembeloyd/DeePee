@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
@@ -25,9 +24,7 @@ import android.widget.Spinner;
 import android.widget.TimePicker;
 
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 import com.loycompany.deepee.DataPlanActivity;
 import com.loycompany.deepee.R;
 import com.loycompany.deepee.adapters.MainDataPlanRecyclerViewAdapter;
@@ -36,7 +33,6 @@ import com.loycompany.deepee.classes.DateTime;
 import com.loycompany.deepee.database.DeePeeDatabase;
 
 import java.io.IOException;
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -61,6 +57,7 @@ public class DpsFragment extends Fragment {
     Spinner dialogDataTypeSpinner;
     Button dialogCreateDataPlanButton;
 
+    TextInputEditText dialogDpName, dialogDpDataSize;
     TextInputEditText dialogStartTime, dialogEndTime;
 
     int day, month, year, hour, minute;
@@ -68,6 +65,8 @@ public class DpsFragment extends Fragment {
 
     private DeePeeDatabase deePeeDatabase;
     private SQLiteDatabase mDb;
+
+    DataPlan dataPlanToCreate;
 
     public DpsFragment(Context context) {
         // Required empty public constructor
@@ -150,11 +149,20 @@ public class DpsFragment extends Fragment {
         createDpFabBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                dataPlanToCreate = new DataPlan(getContext());
+
                 createDpDialog = new Dialog(Objects.requireNonNull(getContext()));
 
                 createDpDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 createDpDialog.setCancelable(true);
                 createDpDialog.setContentView(R.layout.dialog_create_dp);
+
+                dialogDpName = createDpDialog.findViewById(R.id.dialog_dp_name);
+                dialogDpDataSize = createDpDialog.findViewById(R.id.dialog_dp_datasize);
+
+                dialogStartTime = createDpDialog.findViewById(R.id.dialog_start_time);
+                dialogEndTime = createDpDialog.findViewById(R.id.dialog_end_time);
 
                 dialogDataTypeSpinner = createDpDialog.findViewById(R.id.dialog_data_type_spinner);
 
@@ -172,15 +180,37 @@ public class DpsFragment extends Fragment {
                     public void onClick(View v) {
                         createDpDialog.cancel();
 
+                        dataPlanToCreate.id = -1;
+                        dataPlanToCreate.name = Objects.requireNonNull(dialogDpName.getText()).toString();
+
+                        dataPlanToCreate.startDateTime = DateTime.parseData(Objects.requireNonNull(dialogEndTime.getText()).toString());
+                        dataPlanToCreate.endDateTime = DateTime.parseData(Objects.requireNonNull(dialogEndTime.getText()).toString());
+
+                        dataPlanToCreate.totalData = Float.parseFloat(Objects.requireNonNull(dialogDpDataSize.getText()).toString());
+                        dataPlanToCreate.totalUsedData = 0f;
+                        dataPlanToCreate.totalAssignedData = 0f;
+
+                        dataPlanToCreate.id = dataPlanToCreate.save();
+
+                        // Create the dataPlan.
+                        if (dialogDataTypeSpinner.getSelectedItemPosition() == 0){
+                            dataPlanToCreate.dataPlanType = DataPlan.DataPlanType.WIFI;
+                        } else if (dialogDataTypeSpinner.getSelectedItemPosition() == 1){
+                            dataPlanToCreate.dataPlanType = DataPlan.DataPlanType.MOBILE_DATA;
+                        } else {
+                            dataPlanToCreate.dataPlanType = DataPlan.DataPlanType.WIFI_MOBILE_DATA;
+                        }
+
                         Intent intent = new Intent(getContext(), DataPlanActivity.class);
+
+                        // Transfer the contents of the new DataPlan.
+                        intent.putExtra("id", dataPlanToCreate.id);
+
                         getContext().startActivity(intent);
                     }
                 });
 
-                dialogStartTime = createDpDialog.findViewById(R.id.dialog_start_time_button);
-                dialogEndTime = createDpDialog.findViewById(R.id.dialog_end_time_button);
-
-                dialogStartTime.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                dialogEndTime.setOnFocusChangeListener(new View.OnFocusChangeListener() {
                     @Override
                     public void onFocusChange(View v, boolean hasFocus) {
                         if (hasFocus){
@@ -190,7 +220,6 @@ public class DpsFragment extends Fragment {
                             year = calendar.get(Calendar.YEAR);
                             month = calendar.get(Calendar.MONTH);
                             day = calendar.get(Calendar.DAY_OF_MONTH);
-
 
                             DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
                                 @Override
@@ -207,8 +236,53 @@ public class DpsFragment extends Fragment {
                                         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                                             myhour = hourOfDay;
                                             myminute = minute;
+
+                                            DateTime dateTime = new DateTime(0, myminute, myhour, myyear,mymonth, myday);
+                                            dialogEndTime.setText(dateTime.toString());
                                         }
                                     }, hour, minute, true);
+
+                                    timePickerDialog.show();
+                                }
+                            }, year, month, day);
+
+                            datePickerDialog.show();
+                        }
+                    }
+                });
+
+                dialogStartTime.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        if (hasFocus){
+
+                            Calendar calendar = Calendar.getInstance();
+
+                            year = calendar.get(Calendar.YEAR);
+                            month = calendar.get(Calendar.MONTH);
+                            day = calendar.get(Calendar.DAY_OF_MONTH);
+
+                            DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+                                @Override
+                                public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                                    myyear = year;
+                                    myday = day;
+                                    mymonth = month;
+
+                                    Calendar c = Calendar.getInstance();
+                                    hour = c.get(Calendar.HOUR);
+                                    minute = c.get(Calendar.MINUTE);
+                                    TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+                                        @Override
+                                        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                            myhour = hourOfDay;
+                                            myminute = minute;
+
+                                            DateTime dateTime = new DateTime(0, myminute, myhour, myyear,mymonth, myday);
+                                            dialogStartTime.setText(dateTime.toString());
+                                        }
+                                    }, hour, minute, true);
+
                                     timePickerDialog.show();
                                 }
                             }, year, month, day);

@@ -65,7 +65,7 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/button3"
+                android:id="@+id/activate_plan_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
@@ -86,7 +86,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/textView11"
+                    android:id="@+id/percent_data_used"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
@@ -94,7 +94,7 @@
                     android:textColor="@color/my_green" />
 
                 <TextView
-                    android:id="@+id/textView12"
+                    android:id="@+id/data_used"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
@@ -123,6 +123,7 @@
                     app:helperTextTextColor="#333">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/dp_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:backgroundTint="@android:color/transparent"
@@ -148,6 +149,7 @@
                     app:helperTextTextColor="#333">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/dp_data_size"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:backgroundTint="@android:color/transparent"
@@ -173,6 +175,7 @@
                     app:helperTextTextColor="#333">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/dp_start_time"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:backgroundTint="@android:color/transparent"
@@ -198,6 +201,7 @@
                     app:helperTextTextColor="#333">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/dp_end_time"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:backgroundTint="@android:color/transparent"

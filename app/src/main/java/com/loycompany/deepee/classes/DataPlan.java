@@ -49,7 +49,7 @@ public class DataPlan {
     boolean setEndDataTime(DateTime dateTime){return true;}
     boolean assignDataSize(float dataSize){return true;}
 
-    public boolean save(){
+    public int save(){
         return deePeeDatabase.saveDataPlan(this);
     }
 

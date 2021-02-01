@@ -31,7 +31,10 @@ public class DateTime {
         return day + "-" + month + "-" + year + "(" + hour + "-" + min + "-" + sec;
     }
 
-    public void parseData(String data){
+
+    public static DateTime parseData(String data){
+        DateTime dataTime = new DateTime();
+
         List<String> list = DataParser.javaexplode("(", data);
 
         String p1 = list.get(0);
@@ -39,14 +42,16 @@ public class DateTime {
 
         List<String> dates = DataParser.javaexplode("-", p1);
 
-        this.day = Integer.parseInt(dates.get(0));
-        this.month = Integer.parseInt(dates.get(1));
-        this.year = Integer.parseInt(dates.get(2));
+        dataTime.day = Integer.parseInt(dates.get(0));
+        dataTime.month = Integer.parseInt(dates.get(1));
+        dataTime.year = Integer.parseInt(dates.get(2));
 
         List<String> times = DataParser.javaexplode("-", p2);
 
-        this.sec = Integer.parseInt(times.get(0));
-        this.min = Integer.parseInt(times.get(1));
-        this.hour = Integer.parseInt(times.get(2));
+        dataTime.sec = Integer.parseInt(times.get(0));
+        dataTime.min = Integer.parseInt(times.get(1));
+        dataTime.hour = Integer.parseInt(times.get(2));
+
+        return dataTime;
     }
 }

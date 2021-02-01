@@ -6,5 +6,6 @@
     <string-array name="data_type">
         <item>WI-FI</item>
         <item>Mobile Data</item>
+        <item>Wifi and Mobile Data</item>
     </string-array>
 </resources>

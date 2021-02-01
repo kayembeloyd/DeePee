@@ -43,11 +43,8 @@ public class DeePeeDatabase  extends DatabaseHelper{
 
             DateTime dateTime = new DateTime();
 
-            dateTime.parseData(cursor.getString(6));
-            dataPlan.startDateTime = dateTime;
-
-            dateTime.parseData(cursor.getString(7));
-            dataPlan.endDateTime = dateTime;
+            dataPlan.startDateTime = DateTime.parseData(cursor.getString(6));
+            dataPlan.endDateTime = DateTime.parseData(cursor.getString(7));
 
             cursor.close();
             return dataPlan;
@@ -135,13 +132,8 @@ public class DeePeeDatabase  extends DatabaseHelper{
                     dataPlan.dataPlanType = DataPlan.DataPlanType.WIFI_MOBILE_DATA;
                 }
 
-                DateTime dateTime = new DateTime();
-
-                dateTime.parseData(cursor.getString(6));
-                dataPlan.startDateTime = dateTime;
-
-                dateTime.parseData(cursor.getString(7));
-                dataPlan.endDateTime = dateTime;
+                dataPlan.startDateTime = DateTime.parseData(cursor.getString(6));
+                dataPlan.endDateTime = DateTime.parseData(cursor.getString(7));
 
                 dataPlans.add(dataPlan);
                 cursor.moveToNext();
@@ -164,6 +156,7 @@ public class DeePeeDatabase  extends DatabaseHelper{
     }
 
     public boolean saveCustomApp(CustomApp customApp){
+
         sql_statement = "SELECT * FROM 'CustomApps' WHERE id = " + customApp.id;
 
         Cursor cursor = getReadableDatabase().rawQuery(sql_statement, null);
@@ -200,8 +193,10 @@ public class DeePeeDatabase  extends DatabaseHelper{
         return true;
     }
 
-    public boolean saveDataPlan(DataPlan dataPlan){
+    public int saveDataPlan(DataPlan dataPlan){
         // Check if exists
+        int lastInsertID;
+
         sql_statement = "SELECT * FROM 'DataPlans' WHERE id = " + dataPlan.id;
 
         Cursor cursor = getReadableDatabase().rawQuery(sql_statement, null);
@@ -216,6 +211,7 @@ public class DeePeeDatabase  extends DatabaseHelper{
         }
 
         if (cursor.getCount() > 0){
+            cursor.close();
             // It exist
             // Update it
             sql_statement = "UPDATE DataPlans SET " +
@@ -226,9 +222,14 @@ public class DeePeeDatabase  extends DatabaseHelper{
                     "dataPlanType = '" + dataPlanTypeString + "'" +
                     "startDateTime = '" + dataPlan.startDateTime.toString() + "'" +
                     "endDateTime = '" + dataPlan.endDateTime.toString() + "'" +
-                    "";
+                    "WHERE id = " + dataPlan.id;
 
+            getWritableDatabase().execSQL(sql_statement);
+
+            lastInsertID = dataPlan.id;
         } else {
+            cursor.close();
+
             sql_statement = "INSERT INTO DataPlans (name, totalData, totalAssignedData, totalUsedData, dataPlanType, startDateTime, endDateTime) VALUES " +
                     "("
                     + "'" + dataPlan.name + "',"
@@ -239,13 +240,23 @@ public class DeePeeDatabase  extends DatabaseHelper{
                     + "'" + dataPlan.startDateTime.toString() + "',"
                     + "'" + dataPlan.endDateTime.toString() + "'" +
                     ")";
+
+            getWritableDatabase().execSQL(sql_statement);
+
+            sql_statement = "SELECT * FROM sqlite_sequence;";
+            Cursor cursor1 = getReadableDatabase().rawQuery(sql_statement, null);
+
+            if (cursor1.getCount() > 0){
+                cursor1.moveToFirst();
+                lastInsertID = cursor1.getInt(1);
+            } else {
+                lastInsertID = -1;
+            }
+
+            cursor1.close();
+
         }
 
-        // Toast.makeText(context, "Sql_statement = " + sql_statement, Toast.LENGTH_LONG).show();
-
-        getWritableDatabase().execSQL(sql_statement);
-        cursor.close();
-
-        return true;
+        return lastInsertID;
     }
 }

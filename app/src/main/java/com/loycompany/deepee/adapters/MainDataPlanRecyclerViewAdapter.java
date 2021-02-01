@@ -35,6 +35,10 @@ public class MainDataPlanRecyclerViewAdapter extends RecyclerView.Adapter<MainDa
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, DataPlanActivity.class);
+
+                // Transfer the contents of the new DataPlan.
+                intent.putExtra("id", dataPlanList.get(position).id);
+
                 mContext.startActivity(intent);
             }
         });
