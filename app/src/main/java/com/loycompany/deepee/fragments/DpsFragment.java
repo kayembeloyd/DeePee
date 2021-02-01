@@ -69,15 +69,6 @@ public class DpsFragment extends Fragment {
     private DeePeeDatabase deePeeDatabase;
     private SQLiteDatabase mDb;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     public DpsFragment(Context context) {
         // Required empty public constructor
 
@@ -92,24 +83,30 @@ public class DpsFragment extends Fragment {
         mDb = deePeeDatabase.getWritableDatabase();
 
         // Make sure you load plans from database
+        dataPlanList = new ArrayList<>();
         dataPlanList = deePeeDatabase.getDataPlans();
-        if (dataPlanList == null) dataPlanList = new ArrayList<>();
 
-        // for (int i = 0; i < 10; i++){
-            /*DataPlan dataPlan = new DataPlan(context);
+        if (dataPlanList == null || dataPlanList.size() == 0){
+            dataPlanList = new ArrayList<>();
 
-            dataPlan.name = "Sample DataPlan - " + i;
-            dataPlan.totalData = 200;
-            dataPlan.totalAssignedData = 123;
-            dataPlan.totalUsedData = 43;
+            /*
+            for (int i = 0; i < 10; i++){
+                DataPlan dataPlan = new DataPlan(context);
 
-            dataPlan.startDateTime = new DateTime(0,34,1,2021,4,3);
-            dataPlan.endDateTime = new DateTime(45,30,3,2021,4,3);
+                dataPlan.name = "Sample DataPlan - " + i;
+                dataPlan.totalData = 200;
+                dataPlan.totalAssignedData = 123;
+                dataPlan.totalUsedData = 43;
 
-            dataPlan.save();
+                dataPlan.startDateTime = new DateTime(0,34,1,2021,4,3);
+                dataPlan.endDateTime = new DateTime(45,30,3,2021,4,3);
 
-            dataPlanList.add(dataPlan);*/
-        // }
+                dataPlan.save();
+
+                dataPlanList.add(dataPlan);
+            }
+            */
+        }
 
         mainDataPlanRecyclerViewAdapter = new MainDataPlanRecyclerViewAdapter(getContext(), dataPlanList);
     }
@@ -130,10 +127,6 @@ public class DpsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
@@ -224,41 +217,6 @@ public class DpsFragment extends Fragment {
                         }
                     }
                 });
-
-                /*dialogStartTime.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Calendar calendar = Calendar.getInstance();
-
-                        year = calendar.get(Calendar.YEAR);
-                        month = calendar.get(Calendar.MONTH);
-                        day = calendar.get(Calendar.DAY_OF_MONTH);
-
-
-                        DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                                myyear = year;
-                                myday = day;
-                                mymonth = month;
-
-                                Calendar c = Calendar.getInstance();
-                                hour = c.get(Calendar.HOUR);
-                                minute = c.get(Calendar.MINUTE);
-                                TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
-                                    @Override
-                                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                        myhour = hourOfDay;
-                                        myminute = minute;
-                                    }
-                                }, hour, minute, true);
-                                timePickerDialog.show();
-                            }
-                        }, year, month, day);
-
-                        datePickerDialog.show();
-                    }
-                });*/
 
                 createDpDialog.show();
             }

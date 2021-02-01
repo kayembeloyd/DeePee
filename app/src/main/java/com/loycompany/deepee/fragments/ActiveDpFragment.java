@@ -71,8 +71,6 @@ public class ActiveDpFragment extends Fragment {
         // FOR RECYCLER VIEW
         dataPlanList = new ArrayList<>();
 
-
-
         for (int i = 0; i < 1; i++){
             DataPlan dataPlan = new DataPlan(context);
 
