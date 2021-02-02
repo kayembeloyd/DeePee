@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -66,7 +67,7 @@ public class DataPlanActivity extends AppCompatActivity {
         pieChartView = findViewById(R.id.pie_chart_view);
 
         // Get id of DataPlan
-        int dataPlanId = Objects.requireNonNull(getIntent().getExtras()).getInt("id", 0);
+        final int dataPlanId = Objects.requireNonNull(getIntent().getExtras()).getInt("id", 0);
 
         // Initialize Database
         deePeeDatabase = new DeePeeDatabase(getApplicationContext());
@@ -93,6 +94,14 @@ public class DataPlanActivity extends AppCompatActivity {
             DataPlan dataPlan = deePeeDatabase.dataPlan(dataPlanId);
 
             if (dataPlan != null){
+
+                activateDataPlan.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        deePeeDatabase.setActiveDataPlan(deePeeDatabase.dataPlan(dataPlanId));
+                    }
+                });
+
                 dpName.setText(dataPlan.name);
                 dpDataSize.setText(String.valueOf(dataPlan.totalData));
                 dpStartTime.setText(dataPlan.startDateTime.toString());

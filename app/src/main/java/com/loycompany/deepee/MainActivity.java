@@ -9,6 +9,7 @@ import android.os.Bundle;
 
 import com.google.android.material.tabs.TabLayout;
 import com.loycompany.deepee.adapters.MainViewPagerAdapter;
+import com.loycompany.deepee.classes.DataPlan;
 import com.loycompany.deepee.database.DeePeeDatabase;
 
 import java.io.IOException;

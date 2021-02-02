@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.loycompany.deepee.MainActivity;
 import com.loycompany.deepee.R;
 import com.loycompany.deepee.adapters.MainAppCardRecyclerViewAdapter;
 import com.loycompany.deepee.adapters.MainDataPlanRecyclerViewAdapter;
@@ -70,25 +71,8 @@ public class ActiveDpFragment extends Fragment {
         // Make sure you load plans from database
         // FOR RECYCLER VIEW
         dataPlanList = new ArrayList<>();
-
-        for (int i = 0; i < 1; i++){
-            DataPlan dataPlan = new DataPlan(context);
-
-            dataPlan.id = 0;
-            dataPlan.name = "Default Plan";
-            dataPlan.totalData = 43;
-            dataPlan.totalAssignedData = 0;
-            dataPlan.totalUsedData = 43;
-            dataPlan.dataPlanType = DataPlan.DataPlanType.MOBILE_DATA;
-
-            dataPlan.startDateTime = new DateTime(0,0,0,2021,1,31);
-            dataPlan.endDateTime = new DateTime(0,0,0,2021,1,31);
-
-            dataPlanList.add(dataPlan);
-        }
-
+        dataPlanList.add(deePeeDatabase.activeDataPlan());
         mainDataPlanRecyclerViewAdapter = new MainDataPlanRecyclerViewAdapter(getContext(), dataPlanList);
-
 
         // FOR PAGER
         /*
@@ -98,9 +82,12 @@ public class ActiveDpFragment extends Fragment {
         }
         mainDataPlanPagerAdapter = new MainDataPlanPagerAdapter(dataPlanList, getContext());*/
 
-        customAppList = new ArrayList<>();
+        List<CustomApp> dCustomAppList = deePeeDatabase.getCustomApps();
 
-        customAppList = deePeeDatabase.getCustomApps();
+        customAppList = new ArrayList<>();
+        if (dataPlanList.size() > 0){
+            customAppList = deePeeDatabase.getCustomApps(dataPlanList.get(0).id);
+        }
 
         if (customAppList == null){
             customAppList = new ArrayList<>();
