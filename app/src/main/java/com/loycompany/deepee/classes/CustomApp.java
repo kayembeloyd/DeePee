@@ -49,12 +49,13 @@ public class CustomApp {
     boolean startRecording(){return true;}
     boolean stopRecording(){return true;}
 
-    int getDataPlan(){return 0;}
+    public DataPlan getDataPlan(){return deePeeDatabase.dataPlan(this.dataPlanID);}
     boolean setDataPlan(int dataPlanID){return true;}
 
     public void save(){
         deePeeDatabase.saveCustomApp(this);
     }
+
     boolean delete(){
         return deePeeDatabase.deleteCustomApp(this.id);
     }

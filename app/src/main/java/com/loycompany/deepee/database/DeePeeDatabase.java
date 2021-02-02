@@ -309,13 +309,13 @@ public class DeePeeDatabase  extends DatabaseHelper{
             // Update it
             sql_statement = "UPDATE DataPlans SET " +
                     "name = '" + dataPlan.name + "'" +
-                    "totalData = " + dataPlan.totalData + "" +
-                    "totalAssignedData = " + dataPlan.totalAssignedData + "" +
-                    "totalUsedData = " + dataPlan.totalUsedData + "" +
-                    "dataPlanType = '" + dataPlanTypeString + "'" +
-                    "startDateTime = '" + dataPlan.startDateTime.toString() + "'" +
-                    "endDateTime = '" + dataPlan.endDateTime.toString() + "'" +
-                    "WHERE id = " + dataPlan.id;
+                    ",totalData = " + dataPlan.totalData + "" +
+                    ",totalAssignedData = " + dataPlan.totalAssignedData + "" +
+                    ",totalUsedData = " + dataPlan.totalUsedData + "" +
+                    ",dataPlanType = '" + dataPlanTypeString + "'" +
+                    ",startDateTime = '" + dataPlan.startDateTime.toString() + "'" +
+                    ",endDateTime = '" + dataPlan.endDateTime.toString() + "'" +
+                    " WHERE id = " + dataPlan.id;
 
             getWritableDatabase().execSQL(sql_statement);
 

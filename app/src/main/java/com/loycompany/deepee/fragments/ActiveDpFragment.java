@@ -82,7 +82,6 @@ public class ActiveDpFragment extends Fragment {
         }
         mainDataPlanPagerAdapter = new MainDataPlanPagerAdapter(dataPlanList, getContext());*/
 
-        List<CustomApp> dCustomAppList = deePeeDatabase.getCustomApps();
 
         customAppList = new ArrayList<>();
         if (dataPlanList.size() > 0){
@@ -114,6 +113,28 @@ public class ActiveDpFragment extends Fragment {
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        dataPlanList = new ArrayList<>();
+        dataPlanList.add(deePeeDatabase.activeDataPlan());
+        mainDataPlanRecyclerViewAdapter = new MainDataPlanRecyclerViewAdapter(getContext(), dataPlanList);
+        recyclerView1.setAdapter(mainDataPlanRecyclerViewAdapter);
+
+        customAppList = new ArrayList<>();
+        if (dataPlanList.size() > 0){
+            customAppList = deePeeDatabase.getCustomApps(dataPlanList.get(0).id);
+        }
+
+        if (customAppList == null){
+            customAppList = new ArrayList<>();
+        }
+
+        mainAppCardRecyclerViewAdapter = new MainAppCardRecyclerViewAdapter(getContext(), customAppList);
+        recyclerView2.setAdapter(mainAppCardRecyclerViewAdapter);
     }
 
     @Override
@@ -152,11 +173,12 @@ public class ActiveDpFragment extends Fragment {
         recyclerView2.setItemAnimator(new DefaultItemAnimator());
         recyclerView2.setAdapter(mainAppCardRecyclerViewAdapter);
 
+        /*
         if (deePeeDatabase.getCustomApps() == null){
             Toast.makeText(getContext(), "There is nothing in the database", Toast.LENGTH_LONG).show();
         } else {
             Toast.makeText(getContext(), "There is something in the database", Toast.LENGTH_LONG).show();
-        }
+        } */
 
         // Inflate the layout for this fragment
         return rootView;

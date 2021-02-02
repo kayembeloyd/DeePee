@@ -107,6 +107,23 @@ public class DpsFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        // Update the DataPlanList;
+        // Make sure you load plans from database
+        dataPlanList = new ArrayList<>();
+        dataPlanList = deePeeDatabase.getDataPlans();
+
+        if (dataPlanList == null || dataPlanList.size() == 0){
+            dataPlanList = new ArrayList<>();
+        }
+
+        mainDataPlanRecyclerViewAdapter = new MainDataPlanRecyclerViewAdapter(getContext(), dataPlanList);
+        recyclerView.setAdapter(mainDataPlanRecyclerViewAdapter);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
@@ -194,8 +211,8 @@ public class DpsFragment extends Fragment {
 
                             customApp.dataPlanID = dataPlanToCreate.id;
 
-                            customApp.isUnlimited = false;
-                            customApp.totalData = 100f;
+                            customApp.isUnlimited = true;
+                            customApp.totalData = 0f;
                             customApp.totalUsedData = 0f;
 
                             customApp.save();
