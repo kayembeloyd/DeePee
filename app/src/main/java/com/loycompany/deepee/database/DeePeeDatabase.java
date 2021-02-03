@@ -79,6 +79,49 @@ public class DeePeeDatabase  extends DatabaseHelper{
         }
     }
 
+    public boolean isPaginateDataAvailable = true;
+
+    public List<CustomApp> getCustomApps(int dataPlanID, int max_items, int last_id){
+        String sql_statement = "SELECT * FROM CustomApps WHERE dataPlanID = " + dataPlanID;
+        List<CustomApp> customApps = new ArrayList<>();
+
+        Cursor cursor =  getReadableDatabase().rawQuery(sql_statement, null);
+        int position_keeper = last_id;
+
+        if (last_id < cursor.getCount()){
+            cursor.moveToPosition(last_id);
+
+            if (cursor.getCount() > 0){
+                while(!cursor.isAfterLast()){
+                    if (position_keeper - last_id < max_items){
+                        CustomApp customApp = new CustomApp(this.context);
+
+                        customApp.id = cursor.getInt(0);
+                        customApp.name = cursor.getString(1);
+                        customApp.dataPlanID = cursor.getInt(2);
+
+                        customApp.isEnabled = cursor.getInt(3) == 1;
+                        customApp.isUnlimited = cursor.getInt(4) == 1;
+
+                        customApp.totalData = cursor.getFloat(5);
+                        customApp.totalUsedData = cursor.getFloat(6);
+
+                        customApps.add(customApp);
+                        cursor.moveToNext();
+                        position_keeper++;
+                    } else {
+                        isPaginateDataAvailable = true;
+                        break;
+                    }
+                    isPaginateDataAvailable = false;
+                }
+            }
+        }
+
+        cursor.close();
+        return customApps;
+    }
+
     public List<CustomApp> getCustomApps(int dataPlanID){
         String sql_statement = "SELECT * FROM CustomApps WHERE dataPlanID = " + dataPlanID;
         List<CustomApp> customApps = new ArrayList<>();

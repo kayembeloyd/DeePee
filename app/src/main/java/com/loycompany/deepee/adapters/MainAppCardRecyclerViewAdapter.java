@@ -1,6 +1,8 @@
 package com.loycompany.deepee.adapters;
 
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -118,6 +120,15 @@ public class MainAppCardRecyclerViewAdapter extends RecyclerView.Adapter<MainApp
                 }
             }
         });
+
+        try {
+            final PackageManager pm = mContext.getPackageManager();
+
+            holder.appIconCircleImageView.setImageDrawable(pm.getApplicationIcon(customAppList.get(position).name));
+            pm.getPackageInfo(customAppList.get(position).name, PackageManager.GET_META_DATA);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
 
         holder.appName.setOnClickListener(new View.OnClickListener() {
             @Override

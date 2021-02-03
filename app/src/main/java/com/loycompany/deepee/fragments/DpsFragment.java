@@ -5,6 +5,8 @@ import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
@@ -22,6 +24,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -44,6 +47,9 @@ import java.util.Objects;
  * Use the {@link DpsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
+
+// #LEN331 Lengthy process
+
 public class DpsFragment extends Fragment {
 
     List<DataPlan> dataPlanList;
@@ -201,11 +207,13 @@ public class DpsFragment extends Fragment {
 
                         dataPlanToCreate.id = dataPlanToCreate.save();
 
-                        // Create apps
-                        for (int i = 0; i < 10; i++){
+                        final PackageManager pm = getContext().getPackageManager();
+                        List<ApplicationInfo> packages = pm.getInstalledApplications(PackageManager.GET_META_DATA);
+
+                        for (int i = 0; i < packages.size(); i++){
                             CustomApp customApp = new CustomApp(getContext());
 
-                            customApp.name = "Custom app #" + i;
+                            customApp.name = packages.get(i).packageName;
 
                             customApp.isEnabled = i % 2 == 0;
 

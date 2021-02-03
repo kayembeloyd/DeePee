@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +36,6 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class ActiveDpFragment extends Fragment {
-
     // FOR RECYCLER VIEW
     List<DataPlan> dataPlanList;
     MainDataPlanRecyclerViewAdapter mainDataPlanRecyclerViewAdapter;
@@ -53,6 +54,8 @@ public class ActiveDpFragment extends Fragment {
 
     private DeePeeDatabase deePeeDatabase;
     private SQLiteDatabase mDb;
+
+    Handler handler = new Handler();
 
     public ActiveDpFragment(Context context) {
         // Required empty public constructor
@@ -82,23 +85,15 @@ public class ActiveDpFragment extends Fragment {
         }
         mainDataPlanPagerAdapter = new MainDataPlanPagerAdapter(dataPlanList, getContext());*/
 
-
-        customAppList = new ArrayList<>();
         if (dataPlanList.size() > 0){
-            customAppList = deePeeDatabase.getCustomApps(dataPlanList.get(0).id);
+            customAppList = new ArrayList<>();
+            customAppList.addAll(deePeeDatabase.getCustomApps(dataPlanList.get(0).id, 5, customAppList.size()));
+            mainAppCardRecyclerViewAdapter = new MainAppCardRecyclerViewAdapter(getContext(), customAppList);
         }
 
         if (customAppList == null){
             customAppList = new ArrayList<>();
         }
-
-        /*
-        for (int i = 0; i < 10; i++){
-            customAppList.add(new CustomApp(context));
-        }
-        */
-
-        mainAppCardRecyclerViewAdapter = new MainAppCardRecyclerViewAdapter(getContext(), customAppList);
     }
 
     /**
@@ -124,17 +119,12 @@ public class ActiveDpFragment extends Fragment {
         mainDataPlanRecyclerViewAdapter = new MainDataPlanRecyclerViewAdapter(getContext(), dataPlanList);
         recyclerView1.setAdapter(mainDataPlanRecyclerViewAdapter);
 
-        customAppList = new ArrayList<>();
         if (dataPlanList.size() > 0){
-            customAppList = deePeeDatabase.getCustomApps(dataPlanList.get(0).id);
-        }
-
-        if (customAppList == null){
             customAppList = new ArrayList<>();
+            customAppList.addAll(deePeeDatabase.getCustomApps(dataPlanList.get(0).id, 5, customAppList.size()));
+            mainAppCardRecyclerViewAdapter = new MainAppCardRecyclerViewAdapter(getContext(), customAppList);
+            recyclerView2.setAdapter(mainAppCardRecyclerViewAdapter);
         }
-
-        mainAppCardRecyclerViewAdapter = new MainAppCardRecyclerViewAdapter(getContext(), customAppList);
-        recyclerView2.setAdapter(mainAppCardRecyclerViewAdapter);
     }
 
     @Override
