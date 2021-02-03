@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
 import android.os.SystemClock;
+import android.renderscript.RenderScript;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +28,7 @@ import com.loycompany.deepee.classes.DataPlan;
 import com.loycompany.deepee.classes.DateTime;
 import com.loycompany.deepee.database.DeePeeDatabase;
 
+import java.io.Console;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,18 +61,9 @@ public class ActiveDpFragment extends Fragment {
     Handler handler = new Handler();
 
     public ActiveDpFragment(Context context) {
-        // Required empty public constructor
-
         deePeeDatabase = new DeePeeDatabase(context);
-
-        try {
-            deePeeDatabase.updateDataBase();
-        } catch (IOException mIOException) {
-            throw new Error("UnableToUpdateDatabase");
-        }
-
+        try { deePeeDatabase.updateDataBase(); } catch (IOException mIOException) { throw new Error("UnableToUpdateDatabase"); }
         mDb = deePeeDatabase.getWritableDatabase();
-
 
         // Make sure you load plans from database
         // FOR RECYCLER VIEW
@@ -85,24 +79,14 @@ public class ActiveDpFragment extends Fragment {
         }
         mainDataPlanPagerAdapter = new MainDataPlanPagerAdapter(dataPlanList, getContext());*/
 
+        customAppList = new ArrayList<>();
         if (dataPlanList.size() > 0){
-            customAppList = new ArrayList<>();
             customAppList.addAll(deePeeDatabase.getCustomApps(dataPlanList.get(0).id, 5, customAppList.size()));
             mainAppCardRecyclerViewAdapter = new MainAppCardRecyclerViewAdapter(getContext(), customAppList);
         }
 
-        if (customAppList == null){
-            customAppList = new ArrayList<>();
-        }
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment ActiveDpFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static ActiveDpFragment newInstance(Context context) {
         ActiveDpFragment fragment = new ActiveDpFragment(context);
         Bundle args = new Bundle();
@@ -114,12 +98,20 @@ public class ActiveDpFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        dataPlanList = new ArrayList<>();
-        dataPlanList.add(deePeeDatabase.activeDataPlan());
-        mainDataPlanRecyclerViewAdapter = new MainDataPlanRecyclerViewAdapter(getContext(), dataPlanList);
-        recyclerView1.setAdapter(mainDataPlanRecyclerViewAdapter);
+        // Need a way of detecting whether an active plan has been changed
+
+        // Load the Active dataPlan
+        // dataPlanList = new ArrayList<>();
+        // dataPlanList.add(deePeeDatabase.activeDataPlan());
+        // mainDataPlanRecyclerViewAdapter = new MainDataPlanRecyclerViewAdapter(getContext(), dataPlanList);
+        // recyclerView1.setAdapter(mainDataPlanRecyclerViewAdapter);
 
         if (dataPlanList.size() > 0){
+
+            // Load the Active dataPlan
+            dataPlanList.set(0, deePeeDatabase.activeDataPlan());
+            mainDataPlanRecyclerViewAdapter.notifyItemChanged(0);
+
             customAppList = new ArrayList<>();
             customAppList.addAll(deePeeDatabase.getCustomApps(dataPlanList.get(0).id, 5, customAppList.size()));
             mainAppCardRecyclerViewAdapter = new MainAppCardRecyclerViewAdapter(getContext(), customAppList);
