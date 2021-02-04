@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.renderscript.RenderScript;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,6 +60,7 @@ public class ActiveDpFragment extends Fragment {
     private SQLiteDatabase mDb;
 
     Handler handler = new Handler();
+    int oldDataPlanID = -2;
 
     public ActiveDpFragment(Context context) {
         deePeeDatabase = new DeePeeDatabase(context);
@@ -80,9 +82,10 @@ public class ActiveDpFragment extends Fragment {
         mainDataPlanPagerAdapter = new MainDataPlanPagerAdapter(dataPlanList, getContext());*/
 
         customAppList = new ArrayList<>();
+        mainAppCardRecyclerViewAdapter = new MainAppCardRecyclerViewAdapter(getContext(), customAppList);
+
         if (dataPlanList.size() > 0){
             customAppList.addAll(deePeeDatabase.getCustomApps(dataPlanList.get(0).id, 5, customAppList.size()));
-            mainAppCardRecyclerViewAdapter = new MainAppCardRecyclerViewAdapter(getContext(), customAppList);
         }
 
     }
@@ -112,11 +115,32 @@ public class ActiveDpFragment extends Fragment {
             dataPlanList.set(0, deePeeDatabase.activeDataPlan());
             mainDataPlanRecyclerViewAdapter.notifyItemChanged(0);
 
-            customAppList = new ArrayList<>();
-            customAppList.addAll(deePeeDatabase.getCustomApps(dataPlanList.get(0).id, 5, customAppList.size()));
-            mainAppCardRecyclerViewAdapter = new MainAppCardRecyclerViewAdapter(getContext(), customAppList);
-            recyclerView2.setAdapter(mainAppCardRecyclerViewAdapter);
+            // This makes sure customAppList resets only when the ActiveDataPlan has been changed
+            if (oldDataPlanID == -2){
+                oldDataPlanID = dataPlanList.get(0).id;
+
+                // Create a thread here
+                onResumeLoadCustomAppListThread();
+            } else if (oldDataPlanID != dataPlanList.get(0).id){
+                oldDataPlanID = dataPlanList.get(0).id;
+
+                customAppList = new ArrayList<>();
+                customAppList.addAll(deePeeDatabase.getCustomApps(dataPlanList.get(0).id, 5, customAppList.size()));
+                mainAppCardRecyclerViewAdapter = new MainAppCardRecyclerViewAdapter(getContext(), customAppList);
+                recyclerView2.setAdapter(mainAppCardRecyclerViewAdapter);
+                onResumeLoadCustomAppListThread();
+            }
         }
+    }
+
+    public void onResumeLoadCustomAppListThread(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // SystemClock.sleep(5000);
+                customAppList.addAll(deePeeDatabase.getCustomApps(dataPlanList.get(0).id, customAppList.size()));
+            }
+        }).start();
     }
 
     @Override
@@ -127,10 +151,12 @@ public class ActiveDpFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_active_dp, container, false);
 
         // FOR RECYCLER VIEW
-        mainDataPlanRecyclerViewAdapter = new MainDataPlanRecyclerViewAdapter(getContext(), dataPlanList);
+        // mainDataPlanRecyclerViewAdapter = new MainDataPlanRecyclerViewAdapter(getContext(), dataPlanList);
 
         recyclerView1 = rootView.findViewById(R.id.recycler_view1);
 
@@ -155,14 +181,6 @@ public class ActiveDpFragment extends Fragment {
         recyclerView2.setItemAnimator(new DefaultItemAnimator());
         recyclerView2.setAdapter(mainAppCardRecyclerViewAdapter);
 
-        /*
-        if (deePeeDatabase.getCustomApps() == null){
-            Toast.makeText(getContext(), "There is nothing in the database", Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(getContext(), "There is something in the database", Toast.LENGTH_LONG).show();
-        } */
-
-        // Inflate the layout for this fragment
         return rootView;
     }
 }

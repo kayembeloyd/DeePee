@@ -123,9 +123,7 @@ public class MainAppCardRecyclerViewAdapter extends RecyclerView.Adapter<MainApp
 
         try {
             final PackageManager pm = mContext.getPackageManager();
-
             holder.appIconCircleImageView.setImageDrawable(pm.getApplicationIcon(customAppList.get(position).name));
-            pm.getPackageInfo(customAppList.get(position).name, PackageManager.GET_META_DATA);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
