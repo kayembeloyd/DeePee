@@ -5,6 +5,8 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -52,9 +54,12 @@ public class ActiveDpFragment extends Fragment {
     ViewPager viewPager;*/
 
     List<CustomApp> customAppList;
+    List<CustomApp> fastCustomAppList;
     MainAppCardRecyclerViewAdapter mainAppCardRecyclerViewAdapter;
     RecyclerView recyclerView2;
     RecyclerView.LayoutManager layoutManager2;
+
+    NestedScrollView nestedScrollView;
 
     private DeePeeDatabase deePeeDatabase;
     private SQLiteDatabase mDb;
@@ -82,10 +87,12 @@ public class ActiveDpFragment extends Fragment {
         mainDataPlanPagerAdapter = new MainDataPlanPagerAdapter(dataPlanList, getContext());*/
 
         customAppList = new ArrayList<>();
-        mainAppCardRecyclerViewAdapter = new MainAppCardRecyclerViewAdapter(getContext(), customAppList);
+        fastCustomAppList = new ArrayList<>();
+        mainAppCardRecyclerViewAdapter = new MainAppCardRecyclerViewAdapter(getContext(), fastCustomAppList);
 
         if (dataPlanList.size() > 0){
-            customAppList.addAll(deePeeDatabase.getCustomApps(dataPlanList.get(0).id, 5, customAppList.size()));
+            customAppList.addAll(deePeeDatabase.getCustomApps(dataPlanList.get(0).id, 4, customAppList.size()));
+            fastCustomAppList.addAll(customAppList);
         }
 
     }
@@ -115,6 +122,17 @@ public class ActiveDpFragment extends Fragment {
             dataPlanList.set(0, deePeeDatabase.activeDataPlan());
             mainDataPlanRecyclerViewAdapter.notifyItemChanged(0);
 
+            if (customAppList.size() > 3){
+                fastCustomAppList = new ArrayList<>();
+
+                for (int i = 0; i < 3; i++){
+                    fastCustomAppList.add(customAppList.get(i));
+                    mainAppCardRecyclerViewAdapter = new MainAppCardRecyclerViewAdapter(getContext(), fastCustomAppList);
+                    recyclerView2.setAdapter(mainAppCardRecyclerViewAdapter);
+                }
+            }
+
+
             // This makes sure customAppList resets only when the ActiveDataPlan has been changed
             if (oldDataPlanID == -2){
                 oldDataPlanID = dataPlanList.get(0).id;
@@ -125,8 +143,10 @@ public class ActiveDpFragment extends Fragment {
                 oldDataPlanID = dataPlanList.get(0).id;
 
                 customAppList = new ArrayList<>();
-                customAppList.addAll(deePeeDatabase.getCustomApps(dataPlanList.get(0).id, 5, customAppList.size()));
-                mainAppCardRecyclerViewAdapter = new MainAppCardRecyclerViewAdapter(getContext(), customAppList);
+                fastCustomAppList = new ArrayList<>();
+                customAppList.addAll(deePeeDatabase.getCustomApps(dataPlanList.get(0).id, 4, customAppList.size()));
+                fastCustomAppList.addAll(customAppList);
+                mainAppCardRecyclerViewAdapter = new MainAppCardRecyclerViewAdapter(getContext(), fastCustomAppList);
                 recyclerView2.setAdapter(mainAppCardRecyclerViewAdapter);
                 onResumeLoadCustomAppListThread();
             }
@@ -171,7 +191,7 @@ public class ActiveDpFragment extends Fragment {
         viewPager = rootView.findViewById(R.id.view_pager);
         viewPager.setAdapter(mainDataPlanPagerAdapter); */
 
-        mainAppCardRecyclerViewAdapter = new MainAppCardRecyclerViewAdapter(getContext(), customAppList);
+        mainAppCardRecyclerViewAdapter = new MainAppCardRecyclerViewAdapter(getContext(), fastCustomAppList);
 
         recyclerView2 = rootView.findViewById(R.id.recycler_view2);
 
@@ -181,6 +201,29 @@ public class ActiveDpFragment extends Fragment {
         recyclerView2.setItemAnimator(new DefaultItemAnimator());
         recyclerView2.setAdapter(mainAppCardRecyclerViewAdapter);
 
+        nestedScrollView = rootView.findViewById(R.id.nested_scroll_view);
+
+        recyclerView2.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                if (!nestedScrollView.canScrollVertically(1)) {
+                    // Load more
+                    if (customAppList.size() > fastCustomAppList.size()){
+                        int n = fastCustomAppList.size() + 3;
+                        for (int i = fastCustomAppList.size() - 1; i < n; i++){
+                            if (i < customAppList.size() - 1){
+                                fastCustomAppList.add(customAppList.get(i));
+                                mainAppCardRecyclerViewAdapter.notifyItemInserted(fastCustomAppList.size() - 1);
+                            } else {
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        });
         return rootView;
     }
 }
