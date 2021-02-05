@@ -1,5 +1,6 @@
 package com.loycompany.deepee.fragments;
 
+import android.app.usage.NetworkStatsManager;
 import android.content.Context;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -67,7 +68,7 @@ public class ActiveDpFragment extends Fragment {
     Handler handler = new Handler();
     int oldDataPlanID = -2;
 
-    public ActiveDpFragment(Context context) {
+    public ActiveDpFragment(Context context) {        
         deePeeDatabase = new DeePeeDatabase(context);
         try { deePeeDatabase.updateDataBase(); } catch (IOException mIOException) { throw new Error("UnableToUpdateDatabase"); }
         mDb = deePeeDatabase.getWritableDatabase();
@@ -76,7 +77,7 @@ public class ActiveDpFragment extends Fragment {
         // FOR RECYCLER VIEW
         dataPlanList = new ArrayList<>();
         dataPlanList.add(deePeeDatabase.activeDataPlan());
-        mainDataPlanRecyclerViewAdapter = new MainDataPlanRecyclerViewAdapter(getContext(), dataPlanList);
+        mainDataPlanRecyclerViewAdapter = new MainDataPlanRecyclerViewAdapter(context, dataPlanList);
 
         // FOR PAGER
         /*

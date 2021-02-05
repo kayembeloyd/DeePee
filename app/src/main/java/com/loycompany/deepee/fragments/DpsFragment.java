@@ -6,6 +6,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -39,6 +40,7 @@ import com.loycompany.deepee.database.DeePeeDatabase;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
@@ -210,12 +212,32 @@ public class DpsFragment extends Fragment {
                         final PackageManager pm = getContext().getPackageManager();
                         List<ApplicationInfo> packages = pm.getInstalledApplications(PackageManager.GET_META_DATA);
 
+
+                        Iterator<ApplicationInfo> it = packages.iterator();
+                        while (it.hasNext()){
+                            ApplicationInfo applicationInfo = it.next();
+
+                            if (pm.getLaunchIntentForPackage(applicationInfo.packageName) != null) {
+                                /*
+                                if ((applicationInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0){
+                                    // Updated System app
+                                } else if ((applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
+                                    // System Apps
+                                } else {
+                                    // User installed app
+                                } */
+                            } else {
+                                it.remove();
+                            }
+                        }
+
                         for (int i = 0; i < packages.size(); i++){
                             CustomApp customApp = new CustomApp(getContext());
 
-                            customApp.name = packages.get(i).packageName;
+                            customApp.name = String.valueOf(pm.getApplicationLabel(packages.get(i))); // packages.get(i).packageName;
+                            customApp.mPackageName = packages.get(i).packageName;
 
-                            customApp.isEnabled = i % 2 == 0;
+                            customApp.isEnabled = true;
 
                             customApp.dataPlanID = dataPlanToCreate.id;
 

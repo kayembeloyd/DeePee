@@ -62,14 +62,16 @@ public class DeePeeDatabase  extends DatabaseHelper{
         if (cursor.getCount() > 0){
             CustomApp customApp = new CustomApp(this.context);
 
+            customApp.id = cursor.getInt(0);
             customApp.name = cursor.getString(1);
-            customApp.dataPlanID = cursor.getInt(2);
+            customApp.mPackageName = cursor.getString(2);
+            customApp.dataPlanID = cursor.getInt(3);
 
-            customApp.isEnabled = cursor.getInt(3) == 1;
-            customApp.isUnlimited = cursor.getInt(4) == 1;
+            customApp.isEnabled = cursor.getInt(4) == 1;
+            customApp.isUnlimited = cursor.getInt(5) == 1;
 
-            customApp.totalData = cursor.getFloat(5);
-            customApp.totalUsedData = cursor.getFloat(6);
+            customApp.totalData = cursor.getFloat(6);
+            customApp.totalUsedData = cursor.getFloat(7);
 
             cursor.close();
             return customApp;
@@ -96,13 +98,14 @@ public class DeePeeDatabase  extends DatabaseHelper{
 
                     customApp.id = cursor.getInt(0);
                     customApp.name = cursor.getString(1);
-                    customApp.dataPlanID = cursor.getInt(2);
+                    customApp.mPackageName = cursor.getString(2);
+                    customApp.dataPlanID = cursor.getInt(3);
 
-                    customApp.isEnabled = cursor.getInt(3) == 1;
-                    customApp.isUnlimited = cursor.getInt(4) == 1;
+                    customApp.isEnabled = cursor.getInt(4) == 1;
+                    customApp.isUnlimited = cursor.getInt(5) == 1;
 
-                    customApp.totalData = cursor.getFloat(5);
-                    customApp.totalUsedData = cursor.getFloat(6);
+                    customApp.totalData = cursor.getFloat(6);
+                    customApp.totalUsedData = cursor.getFloat(7);
 
                     customApps.add(customApp);
                     cursor.moveToNext();
@@ -131,13 +134,14 @@ public class DeePeeDatabase  extends DatabaseHelper{
 
                         customApp.id = cursor.getInt(0);
                         customApp.name = cursor.getString(1);
-                        customApp.dataPlanID = cursor.getInt(2);
+                        customApp.mPackageName = cursor.getString(2);
+                        customApp.dataPlanID = cursor.getInt(3);
 
-                        customApp.isEnabled = cursor.getInt(3) == 1;
-                        customApp.isUnlimited = cursor.getInt(4) == 1;
+                        customApp.isEnabled = cursor.getInt(4) == 1;
+                        customApp.isUnlimited = cursor.getInt(5) == 1;
 
-                        customApp.totalData = cursor.getFloat(5);
-                        customApp.totalUsedData = cursor.getFloat(6);
+                        customApp.totalData = cursor.getFloat(6);
+                        customApp.totalUsedData = cursor.getFloat(7);
 
                         customApps.add(customApp);
                         cursor.moveToNext();
@@ -168,13 +172,14 @@ public class DeePeeDatabase  extends DatabaseHelper{
 
                 customApp.id = cursor.getInt(0);
                 customApp.name = cursor.getString(1);
-                customApp.dataPlanID = cursor.getInt(2);
+                customApp.mPackageName = cursor.getString(2);
+                customApp.dataPlanID = cursor.getInt(3);
 
-                customApp.isEnabled = cursor.getInt(3) == 1;
-                customApp.isUnlimited = cursor.getInt(4) == 1;
+                customApp.isEnabled = cursor.getInt(4) == 1;
+                customApp.isUnlimited = cursor.getInt(5) == 1;
 
-                customApp.totalData = cursor.getFloat(5);
-                customApp.totalUsedData = cursor.getFloat(6);
+                customApp.totalData = cursor.getFloat(6);
+                customApp.totalUsedData = cursor.getFloat(7);
 
                 customApps.add(customApp);
                 cursor.moveToNext();
@@ -198,13 +203,14 @@ public class DeePeeDatabase  extends DatabaseHelper{
 
                 customApp.id = cursor.getInt(0);
                 customApp.name = cursor.getString(1);
-                customApp.dataPlanID = cursor.getInt(2);
+                customApp.mPackageName = cursor.getString(2);
+                customApp.dataPlanID = cursor.getInt(3);
 
-                customApp.isEnabled = cursor.getInt(3) == 1;
-                customApp.isUnlimited = cursor.getInt(4) == 1;
+                customApp.isEnabled = cursor.getInt(4) == 1;
+                customApp.isUnlimited = cursor.getInt(5) == 1;
 
-                customApp.totalData = cursor.getFloat(5);
-                customApp.totalUsedData = cursor.getFloat(6);
+                customApp.totalData = cursor.getFloat(6);
+                customApp.totalUsedData = cursor.getFloat(7);
 
                 customApps.add(customApp);
                 cursor.moveToNext();
@@ -340,6 +346,7 @@ public class DeePeeDatabase  extends DatabaseHelper{
         if (cursor.getCount() > 0) {
             sql_statement = "UPDATE CustomApps SET " +
                     "name = '" + customApp.name + "'" +
+                    ",packageName = '" + customApp.mPackageName + "'" +
                     ",dataPlanID = " + customApp.dataPlanID +
                     ",isEnabled = " + isEnabled +
                     ",isUnlimited = " + isUnlimited +
@@ -347,9 +354,10 @@ public class DeePeeDatabase  extends DatabaseHelper{
                     ",totalUsedData = " + customApp.totalUsedData +
                     " WHERE id = " + customApp.id;
         } else {
-            sql_statement = "INSERT INTO CustomApps (name, dataPlanID, isEnabled, isUnlimited, totalData, totalUsedData) VALUES " +
+            sql_statement = "INSERT INTO CustomApps (name, packageName, dataPlanID, isEnabled, isUnlimited, totalData, totalUsedData) VALUES " +
                     "("
                     + "'" + customApp.name + "',"
+                    + "'" + customApp.mPackageName + "',"
                     + customApp.dataPlanID + ","
                     + isEnabled + ","
                     + isUnlimited + ","

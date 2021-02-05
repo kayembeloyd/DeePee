@@ -17,6 +17,7 @@ public class CustomApp {
 
     public int id;
     public String name;
+    public String mPackageName;
     public int dataPlanID;
 
     public boolean isEnabled;
