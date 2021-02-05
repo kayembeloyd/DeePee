@@ -1,8 +1,16 @@
 package com.loycompany.deepee.adapters;
 
+import android.app.usage.NetworkStats;
+import android.app.usage.NetworkStatsManager;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.TrafficStats;
+import android.os.Build;
+import android.os.Handler;
+import android.os.SystemClock;
+import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +19,7 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SwitchCompat;
@@ -22,6 +31,7 @@ import com.loycompany.deepee.R;
 import com.loycompany.deepee.classes.CustomApp;
 import com.loycompany.deepee.classes.DataPlan;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 
@@ -33,6 +43,7 @@ public class MainAppCardRecyclerViewAdapter extends RecyclerView.Adapter<MainApp
     Context mContext;
 
     DataPlan dataPlan;
+    Handler handler;
 
     public MainAppCardRecyclerViewAdapter(Context context, List<CustomApp> dataPlans) {
         this.customAppList = dataPlans;
@@ -47,9 +58,72 @@ public class MainAppCardRecyclerViewAdapter extends RecyclerView.Adapter<MainApp
 
         holder.appName.setText(customAppList.get(position).name);
         String appDataUsedS;
+        
+        handler = new Handler();
 
         if (customAppList.get(position).isUnlimited){
-            appDataUsedS = "Data used (" + customAppList.get(position).totalUsedData + "mb) (Unlimited)";
+
+            appDataUsedS = "Data used (" + "nan " + "bytes) (Unlimited)";
+
+            // for high API
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        PackageManager pm = mContext.getPackageManager();
+
+                        NetworkStatsManager networkStatsManager;
+                        networkStatsManager = (NetworkStatsManager) mContext.getSystemService(Context.NETWORK_STATS_SERVICE);
+                        TelephonyManager telephonyManager = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
+
+                        try {
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.add(Calendar.DATE, 1);
+
+                            NetworkStats networkStats = networkStatsManager.queryDetailsForUid(ConnectivityManager.TYPE_MOBILE, telephonyManager.getSubscriberId(), 0, calendar.getTimeInMillis(), pm.getApplicationInfo(customAppList.get(position).mPackageName, 0).uid);
+
+                            long rx = 0L;
+                            long tx = 0L;
+                            NetworkStats.Bucket bucket = new NetworkStats.Bucket();
+                            while (networkStats.hasNextBucket()){
+                                networkStats.getNextBucket(bucket);
+                                rx += bucket.getRxBytes();
+                                tx += bucket.getTxBytes();
+                            }
+                            networkStats.close();
+                            final float total = (float) (rx + tx) / (1024f * 1024f);
+
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    customAppList.get(position).totalUsedData = total;
+                                    String appDataUsedS_ = "Data used (" + total + " mb) (Unlimited)";
+                                    holder.appDataUsed.setText(appDataUsedS_);
+                                }
+                            });
+
+                        } catch (PackageManager.NameNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
+            } else {
+                // for less API
+                try {
+                    PackageManager pm = mContext.getPackageManager();
+
+                    long rx = TrafficStats.getUidRxBytes(pm.getApplicationInfo(customAppList.get(position).mPackageName, 0).uid);
+                    long tx = TrafficStats.getUidTxBytes(pm.getApplicationInfo(customAppList.get(position).mPackageName, 0).uid);
+                    long total = (rx + tx)/1024;
+
+                    appDataUsedS = "Data used (" + total + " mb) (Unlimited)";
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            // Old
+            //appDataUsedS = "Data used (" + customAppList.get(position).totalUsedData + "mb) (Unlimited)";
         } else {
             appDataUsedS = "Data used (" + customAppList.get(position).totalUsedData + "mb of " + customAppList.get(position).totalData + "mb)";
         }
