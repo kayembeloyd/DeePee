@@ -1,5 +1,6 @@
 package com.loycompany.deepee;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
@@ -11,6 +12,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.VpnService;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.widget.Toast;
@@ -19,8 +21,10 @@ import com.google.android.material.tabs.TabLayout;
 import com.loycompany.deepee.adapters.MainViewPagerAdapter;
 import com.loycompany.deepee.classes.DataPlan;
 import com.loycompany.deepee.database.DeePeeDatabase;
+import com.loycompany.deepee.services.MyVpnService;
 
 import java.io.IOException;
+import java.net.DatagramSocket;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -33,6 +37,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Intent intent1 = VpnService.prepare(this);
+        if (intent1 != null){
+            // Sizilibho
+            startActivityForResult(intent1, 0);
+        } else {
+            onActivityResult(0, RESULT_OK, null);
+        }
 
         AppOpsManager appOpsManager = (AppOpsManager) getSystemService(Context.APP_OPS_SERVICE);
         int mode = appOpsManager.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS,android.os.Process.myUid(),getPackageName());
@@ -71,6 +83,15 @@ public class MainActivity extends AppCompatActivity {
                 super.onBackPressed();
             }
         }
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK){
+            Intent intent1 = new Intent(this, MyVpnService.class);
+            startService(intent1);
+        }
     }
 }
