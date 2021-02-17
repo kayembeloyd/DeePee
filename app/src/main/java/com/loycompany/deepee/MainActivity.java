@@ -1,31 +1,22 @@
 package com.loycompany.deepee;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.ViewPager;
-
 import android.app.Activity;
 import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.database.SQLException;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.VpnService;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
+
 import com.google.android.material.tabs.TabLayout;
 import com.loycompany.deepee.adapters.MainViewPagerAdapter;
-import com.loycompany.deepee.classes.DataPlan;
-import com.loycompany.deepee.database.DeePeeDatabase;
 import com.loycompany.deepee.services.MyVpnService;
-
-import java.io.IOException;
-import java.net.DatagramSocket;
-import java.util.List;
+import com.loycompany.deepee.threads.DatagramSocketThread;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,11 +24,15 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private MainViewPagerAdapter mainViewPagerAdapter;
 
+    DatagramSocketThread mDatagramSocketThread;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mDatagramSocketThread = new DatagramSocketThread();
+        mDatagramSocketThread.start();
         Intent intent1 = VpnService.prepare(this);
         if (intent1 != null){
             // Sizilibho
@@ -91,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (resultCode == RESULT_OK){
             Intent intent1 = new Intent(this, MyVpnService.class);
+
             startService(intent1);
         }
     }
