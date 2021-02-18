@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (resultCode == RESULT_OK){
             Intent intent1 = new Intent(this, MyVpnService.class);
-
+            // intent1.putExtra("MODE", "START");
             startService(intent1);
         }
     }

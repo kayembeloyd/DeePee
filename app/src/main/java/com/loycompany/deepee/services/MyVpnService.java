@@ -35,9 +35,6 @@ public class MyVpnService extends VpnService implements Handler.Callback, Runnab
     private Thread mThread;
     private ParcelFileDescriptor mInterface;
 
-    //a. Configure a builder for the interface.
-    Builder builder = new Builder();
-
     List<CustomApp> customApps = null;
 
     public MyVpnService() {
@@ -46,6 +43,7 @@ public class MyVpnService extends VpnService implements Handler.Callback, Runnab
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+
         DeePeeDatabase deePeeDatabase = new DeePeeDatabase(this);
         try { deePeeDatabase.updateDataBase(); } catch (IOException mIOException) { throw new Error("UnableToUpdateDatabase"); }
         SQLiteDatabase mDb = deePeeDatabase.getWritableDatabase();
@@ -92,34 +90,43 @@ public class MyVpnService extends VpnService implements Handler.Callback, Runnab
 
     @Override
     public synchronized void run() {
+        Log.i(TAG, "Service started 1");
+
+        try{
+            mInterface.close();
+            mInterface = null;
+        } catch (Exception e){
+            // ignore
+            mInterface = null;
+        }
+
         // Running here
         try {
-            if (mInterface != null){
-                // Using prev
-            } else {
-                try{
-                    mInterface.close();
-                } catch (Exception e){
-                    // ignore
-                }
-
-                if (customApps != null){
-                    for (int i = 0; i < customApps.size(); i++){
-                        // Addition of disallowed enables internet connection
-                        if (customApps.get(i).isEnabled){
-                            builder.addDisallowedApplication(customApps.get(i).mPackageName);
-                        }
-
-                        Log.i(TAG, "I-Allowed application = " + customApps.get(i).mPackageName);
-                    }
-                }
-
-                //a. Configure the TUN and get the interface.
-                mInterface = builder.setSession("MyVPNService")
-                        .addAddress("192.168.0.1", 24)
-                        .addDnsServer("8.8.8.8")
-                        .addRoute("0.0.0.0", 0).establish();
+            try{
+                mInterface.close();
+            } catch (Exception e){
+                // ignore
             }
+
+            //a. Configure a builder for the interface.
+            Builder builder = new Builder();
+
+            if (customApps != null){
+                for (int i = 0; i < customApps.size(); i++){
+                    // Addition of disallowed enables internet connection
+                    if (customApps.get(i).isEnabled){
+                        builder.addDisallowedApplication(customApps.get(i).mPackageName);
+                    }
+
+                    Log.i(TAG, "I-Allowed application = " + customApps.get(i).mPackageName);
+                }
+            }
+
+            //a. Configure the TUN and get the interface.
+            mInterface = builder.setSession("MyVPNService")
+                    .addAddress("192.168.0.1", 24)
+                    .addDnsServer("8.8.8.8")
+                    .addRoute("0.0.0.0", 0).establish();
 
             //b. Packets to be sent are queued in this input stream.
             FileInputStream in = new FileInputStream(
@@ -274,7 +281,10 @@ public class MyVpnService extends VpnService implements Handler.Callback, Runnab
 
         } catch (Exception e){
             // ignore
+            Log.i(TAG, "Service stopped 2");
         }
+
+        Log.i(TAG, "Service stopped 1");
     }
 
     /*

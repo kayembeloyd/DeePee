@@ -1,10 +1,12 @@
 package com.loycompany.deepee.fragments;
 
-import android.app.usage.NetworkStatsManager;
 import android.content.Context;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.core.widget.NestedScrollView;
@@ -13,26 +15,13 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Handler;
-import android.os.SystemClock;
-import android.renderscript.RenderScript;
-import android.util.AttributeSet;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
-import com.loycompany.deepee.MainActivity;
 import com.loycompany.deepee.R;
 import com.loycompany.deepee.adapters.MainAppCardRecyclerViewAdapter;
 import com.loycompany.deepee.adapters.MainDataPlanRecyclerViewAdapter;
 import com.loycompany.deepee.classes.CustomApp;
 import com.loycompany.deepee.classes.DataPlan;
-import com.loycompany.deepee.classes.DateTime;
 import com.loycompany.deepee.database.DeePeeDatabase;
 
-import java.io.Console;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

@@ -1,14 +1,10 @@
 package com.loycompany.deepee.adapters;
 
-import android.app.usage.NetworkStats;
-import android.app.usage.NetworkStatsManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.ConnectivityManager;
 import android.net.TrafficStats;
-import android.os.Build;
 import android.os.Handler;
-import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,8 +22,8 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.loycompany.deepee.R;
 import com.loycompany.deepee.classes.CustomApp;
 import com.loycompany.deepee.classes.DataPlan;
+import com.loycompany.deepee.services.MyVpnService;
 
-import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 
@@ -61,6 +57,7 @@ public class MainAppCardRecyclerViewAdapter extends RecyclerView.Adapter<MainApp
 
             appDataUsedS = "Data used (" + "nan " + "bytes) (Unlimited)";
 
+            /*
             // for high API
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 new Thread(new Runnable() {
@@ -74,9 +71,10 @@ public class MainAppCardRecyclerViewAdapter extends RecyclerView.Adapter<MainApp
 
                         try {
                             Calendar calendar = Calendar.getInstance();
-                            calendar.add(Calendar.DATE, 1);
+                            calendar.add(Calendar.HOUR, 1);
 
-                            NetworkStats networkStats = networkStatsManager.queryDetailsForUid(ConnectivityManager.TYPE_MOBILE, telephonyManager.getSubscriberId(), 0, calendar.getTimeInMillis(), pm.getApplicationInfo(customAppList.get(position).mPackageName, 0).uid);
+                            // The next line needs to disable mobile data/wifi for smooth app flow (isamajame)
+                            NetworkStats networkStats = networkStatsManager.queryDetailsForUid(ConnectivityManager.TYPE_MOBILE, null, 0, calendar.getTimeInMillis(), pm.getApplicationInfo(customAppList.get(position).mPackageName, 0).uid);
 
                             long rx = 0L;
                             long tx = 0L;
@@ -118,6 +116,21 @@ public class MainAppCardRecyclerViewAdapter extends RecyclerView.Adapter<MainApp
                 }
             }
 
+             */
+
+            try {
+                PackageManager pm = mContext.getPackageManager();
+
+                long rx = TrafficStats.getUidRxBytes(pm.getApplicationInfo(customAppList.get(position).mPackageName, 0).uid);
+                long tx = TrafficStats.getUidTxBytes(pm.getApplicationInfo(customAppList.get(position).mPackageName, 0).uid);
+                long total = (rx + tx)/1024;
+
+                appDataUsedS = "Data used (" + total + " mb) (Unlimited)";
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
+
+
             // Old
             //appDataUsedS = "Data used (" + customAppList.get(position).totalUsedData + "mb) (Unlimited)";
         } else {
@@ -141,6 +154,10 @@ public class MainAppCardRecyclerViewAdapter extends RecyclerView.Adapter<MainApp
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 customAppList.get(position).isEnabled = isChecked;
                 customAppList.get(position).save();
+
+                Intent intent1 = new Intent(mContext, MyVpnService.class);
+                // intent1.putExtra("MODE", "RESTART");
+                mContext.startService(intent1);
 
                 if (customAppList.get(position).isEnabled){
                     holder.appCard.setBackgroundResource(R.color.my_grey);
